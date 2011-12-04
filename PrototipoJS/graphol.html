@@ -1,15 +1,53 @@
 <html>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<script>	
+   function strategy_Operator(psSignal)
+   {
+      var p_mytype="operator";
+      this.name=psSignal;
+      this.value=null;      
+      this.receive = function(pValue) {
+         var value  = pValue;
+         if(value!=null && typeof(value)=='object') { 
+            if(value['tonumber']!=null) value = value.tonumber();
+            else if(value['tostring']!=null) value = parseFloat(value = value.tostring());
+            else value=Number(value);
+         } 
+         else if(value!=null) value = parseFloat(pValue);         
+         if(!isNaN(value)) {
+            if(this.value==null) this.value=value;
+            else eval("this.value"+this.name+"=value;");
+		 }
+         return;
+      }
+      this.tonumber=function() {
+		  return this.value;
+	  }
+      this.tostring=function() {
+		  return ""+this.value;
+	  }      
+      this.exec=function() {
+	  }	  
+	  this.getType=function() {
+         return p_mytype;
+	  }
+   }
+
+   
+   
    function strategy_Number(pValue) {
       var p_mytype="number";
       this.name="";
       this.value=pValue;
-      this.mode="+";
+      //this.mode="+";
+      this.strategy=new strategy_Operator("+");
+      if(pValue) this.strategy.receive(this.value);
       this.receive = function(pValue) {
          var value  = pValue;
          if(pValue=="+"||pValue=="-"||pValue=="/"||pValue=="*") {
-            this.mode==pValue;
+            this.value=this.strategy.tonumber();
+            this.strategy=new strategy_Operator(pValue);
+            this.strategy.receive(this.value);
             return;
          }
          if(value!=null && typeof(value)=='object') { 
@@ -21,8 +59,11 @@
          
          if(!isNaN(value)) {
             if(this.value==null) this.value=value;
-            else eval("this.value"+this.mode+"=value;");
-		 }
+            else {
+               this.strategy.receive(value);
+               this.value=this.strategy.tonumber();
+            }
+		   }
          return;
       }
       this.tonumber=function() {
@@ -114,9 +155,10 @@
 	  }	 		 
    }
    
-   function nodoString(pValue)
+   function nodoParser(psValue, psType)
    {
-	   this.name=pValue;
+      this.type = psType
+	   this.value=psValue;
    }
    
    function Nodo()
@@ -181,35 +223,57 @@
 	   var p_cntParentLin=0;
 
 
-       var ehFinalizadorDeNome = function (pCaracter)
+       var ehFinalizadorDeNome = function (psCaracter)
        {
-		   return(pCaracter=="\n"
-                ||pCaracter=="\r"
-                ||pCaracter==" "
-                ||pCaracter=='+'
-                ||pCaracter=='-'
-                ||pCaracter=='*'
-                ||pCaracter=='/'
-                ||pCaracter=='^'
-                ||pCaracter==')'
-                ||pCaracter=='('                
+		   return(psCaracter=="\n"
+                ||psCaracter=="\r"
+                ||psCaracter==" "
+                ||psCaracter=='+'
+                ||psCaracter=='-'
+                ||psCaracter=='*'
+                ||psCaracter=='/'
+                ||psCaracter=='^'
+                ||psCaracter==')'
+                ||psCaracter=='('                
              )
 	   }
 	   
-	   var ehNodo1Caracter = function (pCaracter)
+	   var ehNodo1Caracter = function (psCaracter)
 	   {
-		   return (pCaracter=='+'
-                 ||pCaracter=='-'
-                 ||pCaracter=='*'
-                 ||pCaracter=='/'
-                 ||pCaracter=='^'
+		   return (psCaracter=='+'
+                 ||psCaracter=='-'
+                 ||psCaracter=='*'
+                 ||psCaracter=='/'
+                 ||psCaracter=='^'
               )
 		   
 	   }
 
-	   var out=function(pOut) {  
-		  p_out +=pOut; 
+	   var out=function(psOut) {  
+		  p_out +=psOut; 
+        //alert(p_out);
        }
+       
+/*******************************************************************************
+*$FC consomeRuido Consome Ruído
+*
+*$ED Descrição da Função
+*    Percorre todos os espaços e quebras de linhas existentes entre dois 
+*    simbolos quaisquer e posiciona p_iPos no 1o caracter do próximo simbolo. 
+*    Utilizado para, ao chegar ao fim de uma expressão, encontrar o início da
+*    Próxima.
+*  
+*$EP Parâmetros da Função
+*$P  psCode Código Fonte - String 
+*      Ao Entrar: Contem o código que está sendo compilado
+*
+*$P  p_iPos Posição - Inteiro
+*      Ao Entrar: Contem a posição, no código fonte, do 1o 'caracter nulo' de 
+*         uma sequência
+*      Ao Sair:   Contem a posição, no código fonte, do último 'caracter nulo'
+*         de sequência 
+*
+*******************************************************************************/	        
 	   var consomeRuido=function (psCode)
 	   {
           while(
@@ -222,7 +286,26 @@
           ) 
              p_iPos++;
 	   }
-	   
+
+/*******************************************************************************
+*$FC consomeEspacos Consome Espaços
+*
+*$ED Descrição da Função
+*    Percorre todos os espaços existentes entre dois simbolos quaisquer e 
+*    posiciona p_iPos no 1o caracter do próximo simbolo
+*    Utilizado para, ao chegar ao fim de um nodo, encontrar o início do próximo.
+* 
+*$EP Parâmetros da Função
+*$P  psCode Código Fonte - String 
+*      Ao Entrar: Contem o código que está sendo compilado
+*
+*$P  p_iPos Posição - Inteiro
+*      Ao Entrar: Contem a posição, no código fonte, do 1o espaço de uma 
+*         sequência
+*      Ao Sair:   Contem a posição, no código fonte, do último espaço de uma
+*         sequência 
+*
+*******************************************************************************/	   
 	   var consomeEspacos=function (psCode)
 	   {
           while(p_iPos<psCode.length && psCode.charAt(p_iPos)==" ") 
@@ -297,16 +380,19 @@
 *      Ao Entrar: Profundidade da recursão. Utilizado para nomear as 
 *         variáveis compiladas, evitando a colisão de nomes
 *******************************************************************************/		   
-	   var processaNodo=function(psCode,pbIsRoot,piNivel)
-	   {
-           var sNodo="";
-           if(ehNodo1Caracter(psCode.charAt(p_iPos)))
-              return psCode.charAt(p_iPos);
-              
-		   if(psCode.charAt(p_iPos)=='"'){
+   var processaNodo=function(psCode,pbIsRoot,piNivel) {
+      var sNodo="";
+      if(ehNodo1Caracter(psCode.charAt(p_iPos))) {
+         if(pbIsRoot) {
+            out("operator"+p_cntNodoLin+"=new strategy_Operator(\""+psCode.charAt(p_iPos)+"\");\n");
+            return new nodoParser("operator"+p_cntNodoLin,"operator");
+         }
+         else return '"'+psCode.charAt(p_iPos)+'"';
+      }
+      if(psCode.charAt(p_iPos)=='"'){
 			  p_cntNodoLin++;
 		      out("text"+p_cntNodoLin+"=\""+processaString(psCode)+"\";\n")
-			  return new nodoString("text"+p_cntNodoLin);
+			  return new nodoParser("text"+p_cntNodoLin,"string");
            }
            while(p_iPos<psCode.length && 
                  !ehFinalizadorDeNome(psCode.charAt(p_iPos)))
@@ -364,30 +450,31 @@
                 &&psCode.charAt(p_iPos)!="\r"
                 &&psCode.charAt(p_iPos)!=")"
              )
-          ) 
-		  {
-		      if(psCode.charAt(p_iPos)=='(')  
-		      {
-				 p_iPos++;
-			     sNodo=processaExpressao(psCode,piNivel);  
-			  }
-			  else
-			  {  
-		          if(sNodoReciver=="") sNodo=processaNodo(psCode, true, piNivel);
-		          else sNodo=processaNodo(psCode, false, piNivel);
-		      }
-		       if(sNodoReciver==""){
-				    if(typeof(sNodo)=='object') out("nodo"+piNivel+"=new Nodo()\nnodo"+piNivel+".receive("+sNodo.name+")\n");
-				    else if(!isNaN(sNodo)) out("nodo"+piNivel+"=new Nodo()\nnodo"+piNivel+".receive("+sNodo.name+")\n");
-				    else out("nodo"+piNivel+"=graphol.get(\""+sNodo+"\");\n");
-				    if(typeof(sNodo)=='object') sNodoReciver=sNodo.name;
-				    else sNodoReciver=sNodo;
-			   }
-		       else {
-				   if(typeof(sNodo)=='object') out("nodo"+piNivel+".receive("+sNodo.name+");\n");
-				   else out("nodo"+piNivel+".receive("+sNodo+");\n");
-				   bUnic=false;
-			   }
+           ) 
+		     {
+              if(psCode.charAt(p_iPos)=='(') {
+				     p_iPos++;
+			        sNodo=processaExpressao(psCode,piNivel);  
+			     }
+			     else {  
+		           if(sNodoReciver=="") sNodo=processaNodo(psCode, true, piNivel);
+		           else sNodo=processaNodo(psCode, false, piNivel);
+		        }
+		        if(sNodoReciver==""){
+				     if(typeof(sNodo)=='object'){ 
+                    if(sNodo.type=='string') out("nodo"+piNivel+"=new Nodo()\nnodo"+piNivel+".receive("+sNodo.value+")\n");
+                    else out("nodo"+piNivel+"="+sNodo.value+";\n")
+				     }
+                 else if(!isNaN(sNodo)) out("nodo"+piNivel+"=new Nodo()\nnodo"+piNivel+".receive("+sNodo.value+")\n");
+				     else out("nodo"+piNivel+"=graphol.get(\""+sNodo+"\");\n");
+				     if(typeof(sNodo)=='object') sNodoReciver=sNodo.value;
+				     else sNodoReciver=sNodo;
+			     }
+		        else {
+				     if(typeof(sNodo)=='object') out("nodo"+piNivel+".receive("+sNodo.value+");\n");
+				     else out("nodo"+piNivel+".receive("+sNodo+");\n");
+				     bUnic=false;
+			     }
 			   p_iPos++;
 			   consomeEspacos(psCode);
 		   }		   
@@ -453,6 +540,7 @@
 *******************************************************************************/		   
 	   this.exec = function()
 	   {
+         alert(p_out);
 		   eval(p_out);
 		   graphol=new CGraphol();
 	   }
