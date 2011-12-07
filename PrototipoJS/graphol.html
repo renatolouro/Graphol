@@ -1,6 +1,6 @@
 <html>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<script>	
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <script> 
    function strategy_Operator(psSignal)
    {
       var p_mytype="operator";
@@ -15,22 +15,23 @@
          } 
          else if(value!=null) value = parseFloat(pValue);         
          if(!isNaN(value)) {
+//alert("O operador " + this.name + "recebendo " + psSignal) 
             if(this.value==null) this.value=value;
             else eval("this.value"+this.name+"=value;");
-		 }
+       }
          return;
       }
       this.tonumber=function() {
-		  return this.value;
-	  }
+        return this.value;
+     }
       this.tostring=function() {
-		  return ""+this.value;
-	  }      
+        return ""+this.value;
+     }      
       this.exec=function() {
-	  }	  
-	  this.getType=function() {
+     }     
+     this.getType=function() {
          return p_mytype;
-	  }
+     }
    }
 
    
@@ -42,6 +43,7 @@
       //this.mode="+";
       this.strategy=new strategy_Operator("+");
       if(pValue) this.strategy.receive(this.value);
+      
       this.receive = function(pValue) {
          var value  = pValue;
          if(pValue=="+"||pValue=="-"||pValue=="/"||pValue=="*") {
@@ -50,41 +52,46 @@
             this.strategy.receive(this.value);
             return;
          }
-         if(value!=null && typeof(value)=='object') { 
-            if(value['tonumber']!=null) value = value.tonumber();
+         if(value!=null && typeof(value)=='object') {
+            if(value.getType()=="operator") {
+               this.strategy=value;
+               this.strategy.receive(this.value);
+               this.value=this.strategy.tonumber();
+               return;
+            }
+            else if(value['tonumber']!=null) value = value.tonumber();
             else if(value['tostring']!=null) value = parseFloat(value = value.tostring());
             else value=Number(value);
          } 
          else if(value!=null) value = parseFloat(pValue);
          
          if(!isNaN(value)) {
-            if(this.value==null) this.value=value;
-            else {
-               this.strategy.receive(value);
-               this.value=this.strategy.tonumber();
-            }
-		   }
+            this.strategy.receive(value);
+            this.value=this.strategy.tonumber();
+         }
          return;
       }
+      
       this.tonumber=function() {
-		  return this.value;
-	  }
+        return this.value;
+     }
+      
       this.tostring=function() {
-		  return ""+this.value;
-	  }      
+        return ""+this.value;
+     }      
       this.exec=function() {
-		  
-	  }
-	  
-	  this.getType=function() {
+        
+     }
+     
+     this.getType=function() {
          return p_mytype;
-	  }
-	  
+     }
+     
    }
 
    function strategy_String(pValue)
    {
-	  var p_mytype="text";
+     var p_mytype="text";
       this.name="";
       this.value=pValue;
       this.receive = function(pValue) {
@@ -92,114 +99,121 @@
             if(pValue['tostring']!=null) this.value += pValue.tostring();
             else this.value += pValue
          } 
-         else this.value+=pValue; 	
+         else this.value+=pValue;   
       }
       this.tonumber=function() {
-		  if(isNaN(parseFloat(this.value))) return 0;
-		  return parseFloat(this.value);
-	  }
+        if(isNaN(parseFloat(this.value))) return 0;
+        return parseFloat(this.value);
+     }
       this.tostring=function() {
-		  return this.value;
-	  }      
+        return this.value;
+     }      
       this.exec=function() {
-		  
-	  }
-	  this.getType=function() {
+        
+     }
+     this.getType=function() {
          return p_mytype;
-	  }
-				
+     }
+            
    }
-	
-	function Input()
-	{
-	  var p_mytype="command";
+   
+   function Input()
+   {
+     var p_mytype="command";
       this.query="";
-	  this.value="";
-	  this.receive = function(pValue) {
-	     this.query+=pValue; 	
-	  }
+     this.value="";
+     this.receive = function(pValue) {
+        this.query+=pValue;   
+     }
       this.tonumber=function() {
-		 if(isNaN(parseFloat(this.value))) return 0;
-		 return parseFloat(this.value);
-	  } 
+       if(isNaN(parseFloat(this.value))) return 0;
+       return parseFloat(this.value);
+     } 
       this.tostring=function() {
-	     return this.value;
-	  }      
+        return this.value;
+     }      
       this.exec=function() {
          this.value=prompt(this.query,"");
          this.query="";
-	  }
-	  this.getType=function() {
+     }
+     this.getType=function() {
          return p_mytype;
-	  }	   	
-	}
-	
+     }         
+   }
+   
    function Echo()
    {
-	  var p_mytype="command";
+     var p_mytype="command";
       var arrRec=new Array();
-	  this.receive = function(pValue) {
+     this.receive = function(pValue) {
          if(pValue!=null && typeof(pValue)=='object') { 
             if(pValue['tostring']!=undefined) arrRec[arrRec.length]=pValue.tostring();
             else arrRec[arrRec.length]= pValue
          } 
-         else arrRec[arrRec.length]=pValue; 	
-	  }
-	  this.exec = function(pValue) {
+         else arrRec[arrRec.length]=pValue;  
+     }
+     this.exec = function(pValue) {
          for(var i=0; i<arrRec.length; i++)
             alert(arrRec[i]);
          arrRec=new Array()
       }
       this.getType=function() {
          return p_mytype;
-	  }	 		 
+     }          
    }
    
    function nodoParser(psValue, psType)
    {
       this.type = psType
-	   this.value=psValue;
+      this.value=psValue;
    }
    
    function Nodo()
    {
       var Strategy=null;
           
-	  this.receive = function(pValue) {
-	     if(Strategy!=null) Strategy.receive(pValue);
-	     else {
-		    
-		    if(pValue!=null && typeof(pValue)=='object') { 
-			   if(pValue['getType']!=null) {
-				   if(pValue.getType()=="number")  Strategy = new strategy_Number(pValue.tonumber());	 
-				   else Strategy = new strategy_String(pValue.tostring());  
-			   }
+     this.receive = function(pValue) {
+         if(Strategy!=null){
+//alert(Strategy.getType()+" de valor "+Strategy.value+" receberá " +pValue);
+            Strategy.receive(pValue);
+          }
+         else {
+            if(pValue!=null && typeof(pValue)=='object') { 
+               if(pValue['getType']!=null) {
+                  if(pValue.getType()=="number")  Strategy = new strategy_Number(pValue.tonumber());    
+                  else if(pValue.getType()=="operator"){
+                     Strategy = new strategy_Number(null); 
+                     Strategy.receive(pValue);
+                  }
+                  else Strategy = new strategy_String(pValue.tostring());  
+               }
                else if(pValue['tostring']!=null) Strategy = new strategy_String(pValue.tostring());
                else Strategy = new strategy_String(pValue.tostring());
             } 
             else if(typeof(pValue)=='string') Strategy = new strategy_String(pValue);
-		    else if(!isNaN(pValue)) Strategy = new strategy_Number(pValue);	 
-		 }
-	  }
-	  this.exec = function() {
+          else if(!isNaN(pValue)) Strategy = new strategy_Number(pValue);   
+       }
+     }
+     this.exec = function() {
          if(Strategy!=null) Strategy.exec();
       }
       this.tonumber=function() {
-		 if(Strategy!=null) return Strategy.tonumber();
-	  } 
+       if(Strategy!=null) return Strategy.tonumber();
+     } 
       this.tostring=function() {
-	     if(Strategy!=null) return Strategy.tostring();
-	  }  
-	  this.getType=function() {
-	     if(Strategy!=null) return Strategy.getType();
-	  }     
-      	   
-	   
+        if(Strategy!=null) return Strategy.tostring();
+     }  
+     this.getType=function() {
+        if(Strategy!=null) return Strategy.getType();
+     }     
+            
+      
    }
-   	 
-   function CGraphol()
+       
+   function CGraphol(pThreads)
    {
       var nodos=new Object;
+      var threads=pThreads;
       
       nodos["input"]=new Input();
       nodos["echo"]=new Echo();
@@ -207,25 +221,26 @@
       
       this.get=function(pKey)
       {
-		  if(nodos[pKey]==null) nodos[pKey]=new Nodo(); 
-		  return nodos[pKey];
-	  }
+        if(nodos[pKey]==null) nodos[pKey]=new Nodo(); 
+        return nodos[pKey];
+     }
    }
-	 
-	  
-	
-	function grapholCompiler()
-	{
-	   var p_iPos=0;
-	   var p_state=0;
-	   var p_out = "";
-	   var p_cntNodoLin=0;
-	   var p_cntParentLin=0;
+    
+     
+   
+   function grapholCompiler()
+   {
+      var p_iPos=0;
+      var p_state=0;
+      var p_out = "";
+      var p_threads=new Array();
+      var p_cntNodoLin=0;
+      var p_cntParentLin=0;
 
 
        var ehFinalizadorDeNome = function (psCaracter)
        {
-		   return(psCaracter=="\n"
+         return(psCaracter=="\n"
                 ||psCaracter=="\r"
                 ||psCaracter==" "
                 ||psCaracter=='+'
@@ -236,21 +251,22 @@
                 ||psCaracter==')'
                 ||psCaracter=='('                
              )
-	   }
-	   
-	   var ehNodo1Caracter = function (psCaracter)
-	   {
-		   return (psCaracter=='+'
+      }
+      
+      var ehNodo1Caracter = function (psCaracter)
+      {
+         return (psCaracter=='+'
                  ||psCaracter=='-'
                  ||psCaracter=='*'
                  ||psCaracter=='/'
                  ||psCaracter=='^'
               )
-		   
-	   }
+         
+      }
 
-	   var out=function(psOut) {  
-		  p_out +=psOut; 
+      var out=function(psOut) {  
+        p_threads[p_threads.length]=psOut;
+        //p_out +=psOut; 
         //alert(p_out);
        }
        
@@ -273,9 +289,9 @@
 *      Ao Sair:   Contem a posição, no código fonte, do último 'caracter nulo'
 *         de sequência 
 *
-*******************************************************************************/	        
-	   var consomeRuido=function (psCode)
-	   {
+*******************************************************************************/         
+      var consomeRuido=function (psCode)
+      {
           while(
              p_iPos<psCode.length 
              && (
@@ -285,7 +301,7 @@
              )
           ) 
              p_iPos++;
-	   }
+      }
 
 /*******************************************************************************
 *$FC consomeEspacos Consome Espaços
@@ -305,12 +321,12 @@
 *      Ao Sair:   Contem a posição, no código fonte, do último espaço de uma
 *         sequência 
 *
-*******************************************************************************/	   
-	   var consomeEspacos=function (psCode)
-	   {
+*******************************************************************************/    
+      var consomeEspacos=function (psCode)
+      {
           while(p_iPos<psCode.length && psCode.charAt(p_iPos)==" ") 
              p_iPos++;
-	   }
+      }
 
 
 /*******************************************************************************
@@ -331,25 +347,25 @@
 *      Ao Sair:   Contem a posição, no código fonte, do último caracter do Nodo
 *
 *******************************************************************************/
-	   var processaString=function(psCode)
-	   {
-		   var sNodo="";
-		   p_iPos++;
+      var processaString=function(psCode)
+      {
+         var sNodo="";
+         p_iPos++;
            while(
              p_iPos<psCode.length 
              && (
                 psCode.charAt(p_iPos)!="\""
              )
           ) 
-		   {
-		       if(psCode.charAt(p_iPos)=="\\"){
-				    p_iPos++;
-		            sNodo = sNodo + "\\" + psCode.charAt(p_iPos);
-			   } else sNodo = sNodo + psCode.charAt(p_iPos);
-		       p_iPos++;
-		   }		   
-		   return sNodo;
-	   }
+         {
+             if(psCode.charAt(p_iPos)=="\\"){
+                p_iPos++;
+                  sNodo = sNodo + "\\" + psCode.charAt(p_iPos);
+            } else sNodo = sNodo + psCode.charAt(p_iPos);
+             p_iPos++;
+         }        
+         return sNodo;
+      }
 
 /*******************************************************************************
 *$FC processaNodo PROCESSA PRÓXIMO NODO
@@ -379,33 +395,33 @@
 *$P  piNivel Nível - Inteiro
 *      Ao Entrar: Profundidade da recursão. Utilizado para nomear as 
 *         variáveis compiladas, evitando a colisão de nomes
-*******************************************************************************/		   
+*******************************************************************************/       
    var processaNodo=function(psCode,pbIsRoot,piNivel) {
       var sNodo="";
       if(ehNodo1Caracter(psCode.charAt(p_iPos))) {
-         if(pbIsRoot) {
+         if(pbIsRoot)
+            out("operator"+p_cntNodoLin+"=new Nodo(); operator"+p_cntNodoLin+".receive(new strategy_Operator(\""+psCode.charAt(p_iPos)+"\"));\n");
+         else
             out("operator"+p_cntNodoLin+"=new strategy_Operator(\""+psCode.charAt(p_iPos)+"\");\n");
-            return new nodoParser("operator"+p_cntNodoLin,"operator");
-         }
-         else return '"'+psCode.charAt(p_iPos)+'"';
+         return new nodoParser("operator"+p_cntNodoLin,"operator");
       }
       if(psCode.charAt(p_iPos)=='"'){
-			  p_cntNodoLin++;
-		      out("text"+p_cntNodoLin+"=\""+processaString(psCode)+"\";\n")
-			  return new nodoParser("text"+p_cntNodoLin,"string");
+           p_cntNodoLin++;
+            out("text"+p_cntNodoLin+"=\""+processaString(psCode)+"\";\n")
+           return new nodoParser("text"+p_cntNodoLin,"string");
            }
            while(p_iPos<psCode.length && 
                  !ehFinalizadorDeNome(psCode.charAt(p_iPos)))
-		   {
-		       sNodo = sNodo + psCode.charAt(p_iPos);
-		       p_iPos++;
-		   }
-		   if(ehFinalizadorDeNome(psCode.charAt(p_iPos))) p_iPos--;
+         {
+             sNodo = sNodo + psCode.charAt(p_iPos);
+             p_iPos++;
+         }
+         if(ehFinalizadorDeNome(psCode.charAt(p_iPos))) p_iPos--;
 
-		   if(pbIsRoot||(!isNaN(sNodo))) return sNodo;
-		   out("arg"+piNivel+"=graphol.get(\""+sNodo+"\");\n");	 
-		   return "arg"+piNivel 
-	   }
+         if(pbIsRoot||(!isNaN(sNodo))) return sNodo;
+         out("arg"+piNivel+"=graphol.get(\""+sNodo+"\");\n");   
+         return "arg"+piNivel 
+      }
 
 /*******************************************************************************
 *$FC processaExpressao PROCESSA EXPRESSÃO
@@ -434,12 +450,13 @@
 *$P  piNivel Nível - Inteiro
 *      Ao Entrar: Profundidade da recursão. Utilizado para nomear as 
 *         variáveis compiladas, evitando a colisão de nomes
-*******************************************************************************/		   
-	   var processaExpressao=function(psCode, piNivel)
-	   {
+*******************************************************************************/       
+      var processaExpressao=function(psCode, piNivel)
+      {
            var sNodoReciver="";
            var sNodo;
            var bUnic=true;
+           var bSubExpressao=false;
            
            piNivel++;
            
@@ -451,47 +468,52 @@
                 &&psCode.charAt(p_iPos)!=")"
              )
            ) 
-		     {
+           {
+              bSubExpressao=false;
               if(psCode.charAt(p_iPos)=='(') {
-				     p_iPos++;
-			        sNodo=processaExpressao(psCode,piNivel);  
-			     }
-			     else {  
-		           if(sNodoReciver=="") sNodo=processaNodo(psCode, true, piNivel);
-		           else sNodo=processaNodo(psCode, false, piNivel);
-		        }
-		        if(sNodoReciver==""){
-				     if(typeof(sNodo)=='object'){ 
+                 p_iPos++;
+                 bSubExpressao=true;
+                 sNodo=processaExpressao(psCode,piNivel);  
+              }
+              else {  
+                 if(sNodoReciver=="") sNodo=processaNodo(psCode, true, piNivel);
+                 else sNodo=processaNodo(psCode, false, piNivel);
+              }
+              if(sNodoReciver==""){
+                 if(typeof(sNodo)=='object'){ 
                     if(sNodo.type=='string') out("nodo"+piNivel+"=new Nodo()\nnodo"+piNivel+".receive("+sNodo.value+")\n");
                     else out("nodo"+piNivel+"="+sNodo.value+";\n")
-				     }
-                 else if(!isNaN(sNodo)) out("nodo"+piNivel+"=new Nodo()\nnodo"+piNivel+".receive("+sNodo.value+")\n");
-				     else out("nodo"+piNivel+"=graphol.get(\""+sNodo+"\");\n");
-				     if(typeof(sNodo)=='object') sNodoReciver=sNodo.value;
-				     else sNodoReciver=sNodo;
-			     }
-		        else {
-				     if(typeof(sNodo)=='object') out("nodo"+piNivel+".receive("+sNodo.value+");\n");
-				     else out("nodo"+piNivel+".receive("+sNodo+");\n");
-				     bUnic=false;
-			     }
-			   p_iPos++;
-			   consomeEspacos(psCode);
-		   }		   
-		   if(bUnic) alert("#"+sNodoReciver+"#");
-		   bUnic=true;
-		   
-		   if (piNivel>1 && 
-		         ( p_iPos>=psCode.length 
+                 }
+                 else if(!isNaN(sNodo)) out("nodo"+piNivel+"=new Nodo()\nnodo"+piNivel+".receive("+sNodo+")\n");
+                 else if(bSubExpressao) out("nodo"+piNivel+"="+sNodo+";\n");
+                 else out("nodo"+piNivel+"=graphol.get(\""+sNodo+"\");\n");
+                 
+                 if(typeof(sNodo)=='object') sNodoReciver=sNodo.value;
+                 else if(!isNaN(sNodo)) sNodoReciver="nodo"+piNivel;
+                 else sNodoReciver=sNodo;
+              }
+              else {
+                 if(typeof(sNodo)=='object') out("nodo"+piNivel+".receive("+sNodo.value+");\n");
+                 else out("nodo"+piNivel+".receive("+sNodo+");\n");
+                 bUnic=false;
+              }
+            p_iPos++;
+            consomeEspacos(psCode);
+         }        
+         if(bUnic) alert("#"+sNodoReciver+"#");
+         bUnic=true;
+         
+         if (piNivel>1 && 
+               ( p_iPos>=psCode.length 
                  ||psCode.charAt(p_iPos)=="\n"
                  ||psCode.charAt(p_iPos)=="\r"
                  )) throw "Err1";
-		   else {
-			   out("nodo"+piNivel+".exec();\n");
-			   return "nodo"+piNivel;
-		   }
-		   		   
-	   }
+         else {
+            out("nodo"+piNivel+".exec();\n");
+            return "nodo"+piNivel;
+         }
+                  
+      }
 
 /*******************************************************************************
 *$FC parser Parser
@@ -513,18 +535,18 @@
 *$P  p_iPos Posição - Inteiro
 *      Ao Entrar: 0
 *      Ao Sair:   Tamanho do código fonte + 1
-*******************************************************************************/	
-	   this.parser = function(psCode)
-	   {
-		   p_out = "";
-           while(p_iPos<psCode.length)
-		   {
-		       consomeRuido(psCode);
-		       processaExpressao(psCode,0);
-		       p_iPos++;
-		   }
-		   p_iPos=0;
-		}
+*******************************************************************************/ 
+      this.parser = function(psCode)
+      {
+         p_threads=new Array();
+         while(p_iPos<psCode.length)
+         {
+             consomeRuido(psCode);
+             processaExpressao(psCode,0);
+             p_iPos++;
+         }
+         p_iPos=0;
+      }
 
 /*******************************************************************************
 *$FC exec Executar
@@ -537,21 +559,24 @@
 *$P  p_out Código Compilado - String 
 *      Ao Entrar: Contém o código compilado
 *
-*******************************************************************************/		   
-	   this.exec = function()
-	   {
-         alert(p_out);
-		   eval(p_out);
-		   graphol=new CGraphol();
-	   }
-	}
+*******************************************************************************/       
+      this.exec = function()
+      {
+         //alert(p_out);
+         graphol=new CGraphol();
+         
+         for(var i = 0; i<p_threads.length; i++)
+            eval(p_threads[i]);
+         
+      }
+   }
 /************* FIM *****************************/
 
 /************ INICIALIZAÇÃo *******************/
-	gc = new grapholCompiler();
-	graphol=new CGraphol();	
-	
-	</script>
+   gc = new grapholCompiler();
+
+   
+   </script>
 <body>
 <h1>Protótipo Graphol</h1>
 <h2>REGRAS BÁSICAS</h2>
