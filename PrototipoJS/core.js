@@ -36,6 +36,17 @@ function strategy_Operator(psSignal)
     }
 }
 
+function strategy_Null() {
+    this.exec = function() {
+    }
+    this.tonumber = function() {
+    }
+    this.tostring = function() {
+    }
+    this.getType = function() {
+    }
+}
+
 function strategy_Number(pValue) {
     var p_mytype = "number";
     this.name = "";
@@ -209,26 +220,22 @@ function Nodo()
                 Strategy = new strategy_String(pValue);
             else if (!isNaN(pValue))
                 Strategy = new strategy_Number(pValue);
+            else
+                Strategy = new strategy_Null();
         }
     }
     this.exec = function() {
-        if (Strategy != null)
-            Strategy.exec();
+        Strategy.exec();
     }
     this.tonumber = function() {
-        if (Strategy != null)
-            return Strategy.tonumber();
+        return Strategy.tonumber();
     }
     this.tostring = function() {
-        if (Strategy != null)
-            return Strategy.tostring();
+        return Strategy.tostring();
     }
     this.getType = function() {
-        if (Strategy != null)
-            return Strategy.getType();
+        return Strategy.getType();
     }
-
-
 }
 
 function CGraphol(pThreads)
