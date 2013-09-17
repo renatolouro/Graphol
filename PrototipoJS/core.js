@@ -90,14 +90,12 @@ function strategy_Number(pValue) {
     this.tonumber = function() {
         return this.value;
     }
-
     this.tostring = function() {
         return "" + this.value;
     }
     this.exec = function() {
 
     }
-
     this.getType = function() {
         return p_mytype;
     }
@@ -133,7 +131,35 @@ function strategy_String(pValue)
     this.getType = function() {
         return p_mytype;
     }
+}
 
+function strategy_Factory(pValue) {
+    var Strategy = null;
+
+    if (pValue != null && typeof(pValue) == 'object') {
+        if (pValue['getType'] != null) {
+            if (pValue.getType() == "number")
+                Strategy = new strategy_Number(pValue.tonumber());
+            else if (pValue.getType() == "operator") {
+                Strategy = new strategy_Number(null);
+                Strategy.receive(pValue);
+            }
+            else
+                Strategy = new strategy_String(pValue.tostring());
+        }
+        else if (pValue['tostring'] != null)
+            Strategy = new strategy_String(pValue.tostring());
+        else
+            Strategy = new strategy_String(pValue.tostring());
+    }
+    else if (typeof(pValue) == 'string')
+        Strategy = new strategy_String(pValue);
+    else if (!isNaN(pValue))
+        Strategy = new strategy_Number(pValue);
+    else
+        Strategy = new strategy_Null();
+
+    return Strategy;
 }
 
 function Input()
@@ -196,33 +222,10 @@ function Nodo()
     var Strategy = null;
 
     this.receive = function(pValue) {
-        if (Strategy != null) {
+        if (Strategy != null)
             Strategy.receive(pValue);
-        }
-        else {
-            if (pValue != null && typeof(pValue) == 'object') {
-                if (pValue['getType'] != null) {
-                    if (pValue.getType() == "number")
-                        Strategy = new strategy_Number(pValue.tonumber());
-                    else if (pValue.getType() == "operator") {
-                        Strategy = new strategy_Number(null);
-                        Strategy.receive(pValue);
-                    }
-                    else
-                        Strategy = new strategy_String(pValue.tostring());
-                }
-                else if (pValue['tostring'] != null)
-                    Strategy = new strategy_String(pValue.tostring());
-                else
-                    Strategy = new strategy_String(pValue.tostring());
-            }
-            else if (typeof(pValue) == 'string')
-                Strategy = new strategy_String(pValue);
-            else if (!isNaN(pValue))
-                Strategy = new strategy_Number(pValue);
-            else
-                Strategy = new strategy_Null();
-        }
+        else
+            Strategy = strategy_Factory(pValue);
     }
     this.exec = function() {
         Strategy.exec();
