@@ -295,6 +295,7 @@ function grapholCompiler()
     }
 
     var out = function(psOut) {
+	    p_out = p_out + psOut;
         p_threads[p_threads.length] = psOut;
     }
 
@@ -582,7 +583,8 @@ function grapholCompiler()
      *******************************************************************************/
     this.parser = function(psCode)
     {
-        p_threads = new Array();
+        p_out="";
+		p_threads = new Array();
         while (p_iPos < psCode.length)
         {
             consomeRuido(psCode);
@@ -613,6 +615,11 @@ function grapholCompiler()
             eval(p_threads[i]);
 
     }
+	
+	this.getOut = function()
+	{
+		return p_out;
+	}
 }
 /************* FIM *****************************/
 

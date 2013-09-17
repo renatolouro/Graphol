@@ -24,6 +24,9 @@ num3 3 3 3
 echo "v" nome num3
 echo ("v" nome num3)
 </textarea>
-<input type=button onclick='gc.parser(document.getElementById("code").value); gc.exec(); ' value="Executa"/>
+<input type=button onclick='gc.parser(document.getElementById("code").value); document.getElementById("codeJs").value=gc.getOut();gc.exec(); ' value="Executa"/>
+<textarea id=codeJs cols=80 rows=15>
+
+</textarea>
 </body>
 </html>
