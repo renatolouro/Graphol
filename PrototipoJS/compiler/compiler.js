@@ -349,6 +349,3 @@ function grapholCompiler() {
         return p_out;
     }
 }
-/************ INICIALIZAÇÃo *******************/
-gc = new grapholCompiler();
-/************* FIM *****************************/
