@@ -1,5 +1,4 @@
-function grapholCompiler()
-{
+function grapholCompiler() {
     var p_iPos = 0;
     var p_state = 0;
     var p_out = "";
@@ -7,9 +6,7 @@ function grapholCompiler()
     var p_cntNodoLin = 0;
     var p_cntParentLin = 0;
 
-
-    var ehFinalizadorDeNome = function(psCaracter)
-    {
+    var ehFinalizadorDeNome = function(psCaracter) {
         return(psCaracter == "\n"
                 || psCaracter == "\r"
                 || psCaracter == " "
@@ -23,8 +20,7 @@ function grapholCompiler()
                 )
     }
 
-    var ehNodo1Caracter = function(psCaracter)
-    {
+    var ehNodo1Caracter = function(psCaracter) {
         return (psCaracter == '+'
                 || psCaracter == '-'
                 || psCaracter == '*'
@@ -35,7 +31,7 @@ function grapholCompiler()
     }
 
     var out = function(psOut) {
-	    p_out = p_out + psOut;
+        p_out = p_out + psOut;
         p_threads[p_threads.length] = psOut;
     }
 
@@ -59,8 +55,7 @@ function grapholCompiler()
      *         de sequência 
      *
      *******************************************************************************/
-    var consomeRuido = function(psCode)
-    {
+    var consomeRuido = function(psCode) {
         while (
                 p_iPos < psCode.length
                 && (
@@ -91,8 +86,7 @@ function grapholCompiler()
      *         sequência 
      *
      *******************************************************************************/
-    var consomeEspacos = function(psCode)
-    {
+    var consomeEspacos = function(psCode) {
         while (p_iPos < psCode.length && psCode.charAt(p_iPos) == " ")
             p_iPos++;
     }
@@ -115,8 +109,7 @@ function grapholCompiler()
      *      Ao Sair:   Contem a posição, no código fonte, do último caracter do Nodo
      *
      *******************************************************************************/
-    var processaString = function(psCode)
-    {
+    var processaString = function(psCode) {
         var sNodo = "";
         p_iPos++;
         while (
@@ -222,8 +215,7 @@ function grapholCompiler()
      *      Ao Entrar: Profundidade da recursão. Utilizado para nomear as 
      *         variáveis compiladas, evitando a colisão de nomes
      *******************************************************************************/
-    var processaExpressao = function(psCode, piNivel)
-    {
+    var processaExpressao = function(psCode, piNivel) {
         var sNodoReciver = "";
         var sNodo;
         var bUnic = true;
@@ -321,10 +313,9 @@ function grapholCompiler()
      *      Ao Entrar: 0
      *      Ao Sair:   Tamanho do código fonte + 1
      *******************************************************************************/
-    this.parser = function(psCode)
-    {
-        p_out="";
-		p_threads = new Array();
+    this.parser = function(psCode) {
+        p_out = "";
+        p_threads = new Array();
         while (p_iPos < psCode.length)
         {
             consomeRuido(psCode);
@@ -346,19 +337,17 @@ function grapholCompiler()
      *      Ao Entrar: Contém o código compilado
      *
      *******************************************************************************/
-    this.exec = function()
-    {
+    this.exec = function() {
         graphol = new CGraphol();
 
         for (var i = 0; i < p_threads.length; i++)
             eval(p_threads[i]);
 
     }
-	
-	this.getOut = function()
-	{
-		return p_out;
-	}
+
+    this.getOut = function() {
+        return p_out;
+    }
 }
 /************ INICIALIZAÇÃo *******************/
 gc = new grapholCompiler();
