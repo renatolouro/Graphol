@@ -1,6 +1,5 @@
 function CGraphol(pThreads) {
     var nodos = new Object;
-    var threads = pThreads;
 
     nodos["input"] = new Input();
     nodos["echo"] = new Echo();

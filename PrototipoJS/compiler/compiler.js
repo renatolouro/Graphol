@@ -1,4 +1,5 @@
-function grapholCompiler() {
+function grapholCompiler(pVm) {
+    var p_vm = pVm;
     var p_iPos = 0;
     var p_state = 0;
     var p_out = "";
@@ -32,7 +33,7 @@ function grapholCompiler() {
 
     var out = function(psOut) {
         p_out = p_out + psOut;
-        p_threads[p_threads.length] = psOut;
+        p_vm.registerInstruction(psOut);
     }
 
     /*******************************************************************************
@@ -323,26 +324,6 @@ function grapholCompiler() {
             p_iPos++;
         }
         p_iPos = 0;
-    }
-
-    /*******************************************************************************
-     *$FC exec Executar
-     *
-     *$ED Descrição da Função
-     *    Executa o código fonte, no momento, dando um eval sobre o código compilado
-     *    
-     *$EP Parâmetros da Função
-     *
-     *$P  p_out Código Compilado - String 
-     *      Ao Entrar: Contém o código compilado
-     *
-     *******************************************************************************/
-    this.exec = function() {
-        graphol = new CGraphol();
-
-        for (var i = 0; i < p_threads.length; i++)
-            eval(p_threads[i]);
-
     }
 
     this.getOut = function() {
