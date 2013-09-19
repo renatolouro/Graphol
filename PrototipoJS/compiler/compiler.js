@@ -1,9 +1,8 @@
 function grapholCompiler(pVm) {
     var p_vm = pVm;
     var p_iPos = 0;
-    var p_state = 0;
+    var p_idBloco = 0;
     var p_out = "";
-    var p_threads = new Array();
     var p_cntNodoLin = 0;
     var p_cntParentLin = 0;
 
@@ -33,7 +32,7 @@ function grapholCompiler(pVm) {
 
     var out = function(psOut) {
         p_out = p_out + psOut;
-        p_vm.registerInstruction(psOut);
+        p_vm.registerInstruction(psOut, p_idBloco);
     }
 
     /*******************************************************************************
@@ -221,6 +220,7 @@ function grapholCompiler(pVm) {
         var sNodo;
         var bUnic = true;
         var bSubExpressao = false;
+        var bBloco = false;
 
         piNivel++;
 
@@ -234,7 +234,14 @@ function grapholCompiler(pVm) {
                 )
         {
             bSubExpressao = false;
-            if (psCode.charAt(p_iPos) == '(') {
+            bBloco = false;
+           
+            if (psCode.charAt(p_iPos) == '{') {
+                p_iPos++;
+                bBloco = true;
+                sNodo = processaBloco(psCode, p_idBloco+1);
+            }
+            else if (psCode.charAt(p_iPos) == '(') {
                 p_iPos++;
                 bSubExpressao = true;
                 sNodo = processaExpressao(psCode, piNivel);
@@ -292,6 +299,19 @@ function grapholCompiler(pVm) {
         }
 
     }
+    
+    this.processaBloco = function(psCode, pidBloco) {
+        p_out = "";
+        p_idBloco = pidBloco;
+        while (psCode.charAt(p_iPos) != "}")
+        {
+            consomeRuido(psCode);
+            processaExpressao(psCode, 0);
+            p_iPos++;
+            if(p_iPos >= psCode.length) throw "Err2";
+        }
+        p_iPos = 0;
+    }
 
     /*******************************************************************************
      *$FC parser Parser
@@ -316,7 +336,7 @@ function grapholCompiler(pVm) {
      *******************************************************************************/
     this.parser = function(psCode) {
         p_out = "";
-        p_threads = new Array();
+        p_idBloco = 0;
         while (p_iPos < psCode.length)
         {
             consomeRuido(psCode);
