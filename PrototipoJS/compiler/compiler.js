@@ -8,25 +8,27 @@ function grapholCompiler(pVm) {
 
     var ehFinalizadorDeNome = function(psCaracter) {
         return(psCaracter == "\n"
-                || psCaracter == "\r"
-                || psCaracter == " "
-                || psCaracter == '+'
-                || psCaracter == '-'
-                || psCaracter == '*'
-                || psCaracter == '/'
-                || psCaracter == '^'
-                || psCaracter == ')'
-                || psCaracter == '('
-                )
+            || psCaracter == "\r"
+            || psCaracter == " "
+            || psCaracter == '+'
+            || psCaracter == '-'
+            || psCaracter == '*'
+            || psCaracter == '/'
+            || psCaracter == '^'
+            || psCaracter == ')'
+            || psCaracter == '('
+            || psCaracter == '{'
+            || psCaracter == '}'
+            )
     }
 
     var ehNodo1Caracter = function(psCaracter) {
         return (psCaracter == '+'
-                || psCaracter == '-'
-                || psCaracter == '*'
-                || psCaracter == '/'
-                || psCaracter == '^'
-                )
+            || psCaracter == '-'
+            || psCaracter == '*'
+            || psCaracter == '/'
+            || psCaracter == '^'
+            )
 
     }
 
@@ -57,14 +59,14 @@ function grapholCompiler(pVm) {
      *******************************************************************************/
     var consomeRuido = function(psCode) {
         while (
-                p_iPos < psCode.length
-                && (
+            p_iPos < psCode.length
+            && (
                 psCode.charAt(p_iPos) == "\n"
                 || psCode.charAt(p_iPos) == "\r"
                 || psCode.charAt(p_iPos) == " "
                 )
-                )
-            p_iPos++;
+            )
+        p_iPos++;
     }
 
     /*******************************************************************************
@@ -113,12 +115,12 @@ function grapholCompiler(pVm) {
         var sNodo = "";
         p_iPos++;
         while (
-                p_iPos < psCode.length
-                && (
+            p_iPos < psCode.length
+            && (
                 psCode.charAt(p_iPos) != "\""
                 )
-                )
-        {
+            )
+            {
             if (psCode.charAt(p_iPos) == "\\") {
                 p_iPos++;
                 sNodo = sNodo + "\\" + psCode.charAt(p_iPos);
@@ -173,8 +175,8 @@ function grapholCompiler(pVm) {
             return new nodoParser("text" + p_cntNodoLin, "string");
         }
         while (p_iPos < psCode.length &&
-                !ehFinalizadorDeNome(psCode.charAt(p_iPos)))
-        {
+            !ehFinalizadorDeNome(psCode.charAt(p_iPos)))
+            {
             sNodo = sNodo + psCode.charAt(p_iPos);
             p_iPos++;
         }
@@ -225,21 +227,26 @@ function grapholCompiler(pVm) {
         piNivel++;
 
         while (
-                p_iPos < psCode.length
-                && (
+            p_iPos < psCode.length
+            && (
                 psCode.charAt(p_iPos) != "\n"
                 && psCode.charAt(p_iPos) != "\r"
                 && psCode.charAt(p_iPos) != ")"
+                && psCode.charAt(p_iPos) != "}"
                 )
-                )
-        {
+            )
+            {
             bSubExpressao = false;
             bBloco = false;
            
             if (psCode.charAt(p_iPos) == '{') {
                 p_iPos++;
                 bBloco = true;
-                sNodo = processaBloco(psCode, p_idBloco+1);
+                var gc=new grapholCompiler(p_vm);
+                out("/* Inicio BLOCO " + p_idBloco+1 + "*/ \n");
+                sNodo = gc.processaBloco(psCode, p_idBloco+1, p_iPos);
+                p_iPos = gc.getPos();
+                out("/* Fim BLOCO " + p_idBloco+1 + "*/ \n");
             }
             else if (psCode.charAt(p_iPos) == '(') {
                 p_iPos++;
@@ -288,10 +295,10 @@ function grapholCompiler(pVm) {
         bUnic = true;
 
         if (piNivel > 1 &&
-                (p_iPos >= psCode.length
-                        || psCode.charAt(p_iPos) == "\n"
-                        || psCode.charAt(p_iPos) == "\r"
-                        ))
+            (p_iPos >= psCode.length
+                || psCode.charAt(p_iPos) == "\n"
+                || psCode.charAt(p_iPos) == "\r"
+                ))
             throw "Err1";
         else {
             out("nodo" + piNivel + ".exec();\n");
@@ -300,17 +307,19 @@ function grapholCompiler(pVm) {
 
     }
     
-    this.processaBloco = function(psCode, pidBloco) {
+    this.processaBloco = function(psCode, pidBloco, piPos) {
         p_out = "";
         p_idBloco = pidBloco;
-        while (psCode.charAt(p_iPos) != "}")
+        p_iPos = piPos;
+        var endBlock = false;
+        while (!endBlock)
         {
             consomeRuido(psCode);
             processaExpressao(psCode, 0);
-            p_iPos++;
+            if(psCode.charAt(p_iPos) == "}") endBlock=true;
+            else p_iPos++;
             if(p_iPos >= psCode.length) throw "Err2";
         }
-        p_iPos = 0;
     }
 
     /*******************************************************************************
@@ -348,5 +357,9 @@ function grapholCompiler(pVm) {
 
     this.getOut = function() {
         return p_out;
+    }
+    
+    this.getPos = function() {
+        return p_iPos;
     }
 }

@@ -1,7 +1,13 @@
 function grapholVm() {
-    var p_instructions = new Array();
-    this.registerInstruction = function(psInstruction) {
-        p_instructions[p_instructions.length] = psInstruction;
+    var p_blocks = new Array();
+    
+    this.registerInstruction = function(psInstruction, pidBlock) {
+        var idBlock = 0;
+        var instructions = null;
+        if(pidBlock!=null) idBlock = pidBlock;
+        if(idBlock>=p_blocks.length) p_blocks[idBlock] = new Array();
+        instructions = p_blocks[idBlock];
+        instructions[instructions.length] = psInstruction;
     }
     
     /*******************************************************************************
@@ -18,9 +24,13 @@ function grapholVm() {
      *******************************************************************************/
     this.exec = function() {
         graphol = new CGraphol();
-
-        for (var i = 0; i < p_instructions.length; i++)
-            eval(p_instructions[i]);
-
+        
+        var instructions = p_blocks[0];
+        for (var i = 0; i < instructions.length; i++)
+            eval(instructions[i]);
+    }
+    
+    this.clear = function() {
+        p_blocks = new Array();
     }
 }
