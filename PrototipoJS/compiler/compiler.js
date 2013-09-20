@@ -245,6 +245,7 @@ function grapholCompiler(pVm) {
                 var gc=new grapholCompiler(p_vm);
                 out("/* Inicio BLOCO " + p_idBloco+1 + "*/ \n");
                 sNodo = gc.processaBloco(psCode, p_idBloco+1, p_iPos);
+                p_out = p_out + gc.getOut();
                 p_iPos = gc.getPos();
                 out("/* Fim BLOCO " + p_idBloco+1 + "*/ \n");
             }
