@@ -220,9 +220,7 @@ function grapholCompiler(pVm) {
     var processaExpressao = function(psCode, piNivel) {
         var sNodoReciver = "";
         var sNodo;
-        var bUnic = true;
         var bSubExpressao = false;
-        var bBloco = false;
 
         piNivel++;
 
@@ -237,17 +235,18 @@ function grapholCompiler(pVm) {
             )
             {
             bSubExpressao = false;
-            bBloco = false;
            
             if (psCode.charAt(p_iPos) == '{') {
                 p_iPos++;
-                bBloco = true;
                 var gc=new grapholCompiler(p_vm);
-                out("/* Inicio BLOCO " + p_idBloco+1 + "*/ \n");
+                out("/* Inicio BLOCO " + (p_idBloco+1) + "*/ \n");
                 sNodo = gc.processaBloco(psCode, p_idBloco+1, p_iPos);
                 p_out = p_out + gc.getOut();
                 p_iPos = gc.getPos();
-                out("/* Fim BLOCO " + p_idBloco+1 + "*/ \n");
+                out("/* Fim BLOCO " + (p_idBloco+1) + "*/ \n");
+
+                out("block" + (p_idBloco+1) + "=new strategy_Block(\"" + (p_idBloco+1) + "\");\n");
+                sNodo = "block" + (p_idBloco+1);
             }
             else if (psCode.charAt(p_iPos) == '(') {
                 p_iPos++;
@@ -286,14 +285,10 @@ function grapholCompiler(pVm) {
                     out("nodo" + piNivel + ".receive(" + sNodo.value + ");\n");
                 else
                     out("nodo" + piNivel + ".receive(" + sNodo + ");\n");
-                bUnic = false;
             }
             p_iPos++;
             consomeEspacos(psCode);
         }
-        if (bUnic)
-            alert("#" + sNodoReciver + "#");
-        bUnic = true;
 
         if (piNivel > 1 &&
             (p_iPos >= psCode.length
