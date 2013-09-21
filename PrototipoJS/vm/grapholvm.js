@@ -2,6 +2,7 @@ function grapholVm() {
     var p_blocks = new Array();
     var p_end = true;
     var p_IR  = {BASE:0,ADDR:-1};
+    var p_stack = new Array();
     
     this.registerInstruction = function(psInstruction, pidBlock) {
         var idBlock = 0;
@@ -40,11 +41,13 @@ function grapholVm() {
     }
     
     this.call = function(pidBlock) {
+        p_stack.push(p_IR);
+        p_IR = {BASE:pidBlock,ADDR:-1};
         
     }
     
     this.callback = function(pidBlock) {
-        
+        p_IR = p_stack.pop();    
     }
     
     this.endExec = function() {
