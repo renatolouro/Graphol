@@ -4,7 +4,7 @@ function Input() {
     this.value = "";
 
     this.receive = function(pValue) {
-        this.query += pValue;
+        this.value = prompt(pValue, "");
     }
 
     this.tonumber = function() {
@@ -18,8 +18,7 @@ function Input() {
     }
 
     this.exec = function() {
-        this.value = prompt(this.query, "");
-        this.query = "";
+
     }
 
     this.getType = function() {

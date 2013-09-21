@@ -1,22 +1,18 @@
 function Echo() {
     var p_mytype = "command";
-    var arrRec = new Array();
 
     this.receive = function(pValue) {
         if (pValue != null && typeof(pValue) == 'object') {
             if (pValue['tostring'] != undefined)
-                arrRec[arrRec.length] = pValue.tostring();
+                alert(pValue.tostring());
             else
-                arrRec[arrRec.length] = pValue
+                alert(pValue);
         }
         else
-            arrRec[arrRec.length] = pValue;
+            alert(pValue);
     }
 
-    this.exec = function(pValue) {
-        for (var i = 0; i < arrRec.length; i++)
-            alert(arrRec[i]);
-        arrRec = new Array()
+    this.exec = function() {
     }
 
     this.getType = function() {

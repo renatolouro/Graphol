@@ -297,7 +297,6 @@ function grapholCompiler(pVm) {
                 ))
             throw "Err1";
         else {
-            out("nodo" + piNivel + ".exec();\n");
             return "nodo" + piNivel;
         }
 
