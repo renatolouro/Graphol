@@ -315,6 +315,7 @@ function grapholCompiler(pVm) {
             else p_iPos++;
             if(p_iPos >= psCode.length) throw "Err2";
         }
+        out("callback();\n");
     }
 
     /*******************************************************************************
@@ -348,6 +349,7 @@ function grapholCompiler(pVm) {
             p_iPos++;
         }
         p_iPos = 0;
+        out("endExec();\n");
     }
 
     this.getOut = function() {

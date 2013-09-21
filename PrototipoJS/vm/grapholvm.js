@@ -1,5 +1,7 @@
 function grapholVm() {
     var p_blocks = new Array();
+    var p_end = true;
+    var p_IR  = {BASE:0,ADDR:-1};
     
     this.registerInstruction = function(psInstruction, pidBlock) {
         var idBlock = 0;
@@ -24,13 +26,29 @@ function grapholVm() {
      *******************************************************************************/
     this.exec = function() {
         graphol = new CGraphol();
-        
-        var instructions = p_blocks[0];
-        for (var i = 0; i < instructions.length; i++)
-            eval(instructions[i]);
+        p_end = false;
+        p_IR = {BASE:0,ADDR:-1};
+
+        while (!p_end) {
+            p_IR.ADDR++;
+            eval(p_blocks[p_IR.BASE][p_IR.ADDR]);
+        }
     }
     
     this.clear = function() {
         p_blocks = new Array();
     }
+    
+    this.call = function(pidBlock) {
+        
+    }
+    
+    this.callback = function(pidBlock) {
+        
+    }
+    
+    this.endExec = function() {
+        p_end=true;
+    }
+    
 }
