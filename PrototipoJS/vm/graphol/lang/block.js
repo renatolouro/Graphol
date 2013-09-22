@@ -5,7 +5,7 @@ function strategy_Block(pidBlock) {
     this.value = pidBlock;
 
     this.receive = function(pValue) {
-        
+        if(pValue.getMessage=="run") exec();
     }
 
     this.tonumber = function() {

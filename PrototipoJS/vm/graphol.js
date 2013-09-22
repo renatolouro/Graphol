@@ -3,6 +3,7 @@ function CGraphol(pThreads) {
 
     nodos["input"] = new Input();
     nodos["echo"] = new Echo();
+    nodos["run"] = new Run();
 
     this.get = function(pKey)
     {
