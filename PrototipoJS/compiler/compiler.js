@@ -245,8 +245,8 @@ function grapholCompiler(pVm) {
                 p_iPos = gc.getPos();
                 out("/* Fim BLOCO " + (p_idBloco+1) + "*/ \n");
 
-                out("block" + (p_idBloco+1) + "=new strategy_Block(\"" + (p_idBloco+1) + "\");\n");
-                out("block" + (p_idBloco+1) + ".stVm(self);\n");
+                out("block" + (p_idBloco+1) + "=new strategy_Block(" + (p_idBloco+1) + ");\n");
+                out("block" + (p_idBloco+1) + ".setVm(self);\n");
                 sNodo = "block" + (p_idBloco+1);
                 //sNodo = new nodoParser("block" + (p_idBloco+1), "block");
             }
@@ -318,7 +318,7 @@ function grapholCompiler(pVm) {
             else p_iPos++;
             if(p_iPos >= psCode.length) throw "Err2";
         }
-        out("callback();\n");
+        out("self.callback();\n");
     }
 
     /*******************************************************************************

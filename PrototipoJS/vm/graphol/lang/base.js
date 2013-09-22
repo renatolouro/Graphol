@@ -52,7 +52,9 @@ function strategy_Factory(pValue) {
 
     if (pValue != null && typeof(pValue) == 'object') {
         if (pValue['getType'] != null) {
-            if (pValue.getType() == "number")
+            if (pValue.getType() == "block")
+                Strategy = pValue;
+            else if (pValue.getType() == "number")
                 Strategy = new strategy_Number(pValue.tonumber());
             else if (pValue.getType() == "operator") {
                 Strategy = new strategy_Number(null);

@@ -47,7 +47,7 @@ function grapholVm() {
         
     }
     
-    this.callback = function(pidBlock) {
+    this.callback = function() {
         p_IR = p_stack.pop();    
     }
     
