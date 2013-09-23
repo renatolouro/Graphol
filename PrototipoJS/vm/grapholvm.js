@@ -4,6 +4,7 @@ function grapholVm() {
     var p_IR  = {BASE:0,ADDR:-1};
     var p_stack = new Array();
     var self = this;
+    var graphol = null;
     
     this.registerInstruction = function(psInstruction, pidBlock) {
         var idBlock = 0;
