@@ -248,7 +248,7 @@ function grapholCompiler(pVm) {
                 out("block" + (p_idBloco+1) + "=new strategy_Block(" + (p_idBloco+1) + ");\n");
                 out("block" + (p_idBloco+1) + ".setVm(self);\n");
                 sNodo = "block" + (p_idBloco+1);
-                //sNodo = new nodoParser("block" + (p_idBloco+1), "block");
+            //sNodo = new nodoParser("block" + (p_idBloco+1), "block");
             }
             else if (psCode.charAt(p_iPos) == '(') {
                 p_iPos++;
@@ -362,4 +362,9 @@ function grapholCompiler(pVm) {
     this.getPos = function() {
         return p_iPos;
     }
+}
+
+function nodoParser(psValue, psType) {
+    this.type = psType
+    this.value = psValue;
 }

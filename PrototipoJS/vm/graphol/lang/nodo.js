@@ -1,8 +1,3 @@
-function nodoParser(psValue, psType) {
-    this.type = psType
-    this.value = psValue;
-}
-
 function Nodo() {
     var Strategy = null;
 

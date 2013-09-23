@@ -1,33 +1,33 @@
 <html>
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-   <script type="text/javascript" src="vm/graphol/lang/base.js"></script>
-   <script type="text/javascript" src="vm/graphol/lang/number.js"></script>
-   <script type="text/javascript" src="vm/graphol/lang/string.js"></script>
-   <script type="text/javascript" src="vm/graphol/lang/block.js"></script>
-   <script type="text/javascript" src="vm/graphol/lang/message/run.js"></script>
-   <script type="text/javascript" src="vm/graphol/command/echo.js"></script>
-   <script type="text/javascript" src="vm/graphol/command/input.js"></script>
-   <script type="text/javascript" src="vm/graphol.js"></script>
-   <script type="text/javascript" src="vm/grapholvm.js"></script>
-   <script type="text/javascript" src="compiler/compiler.js"></script>
-   <script type="text/javascript" src="compiler/core.js"></script>
-   <script type="text/javascript">
-       vm = new grapholVm();
-       gc = new grapholCompiler(vm);
-   </script>
-<body>
-<h1>Protótipo Graphol</h1>
-<h2>REGRAS BÁSICAS</h2>
-Uma expressão é formada por um nodo seguido, opcionalmente por um ou mais: NODO1 NODO2 NODO3 ... NODON</br>
-Isto significa que NODO1 receberá como mensagem os NODOS seguintes e os tratará individualmente.</br>
-Eventualmente um nodo é formado por uma expressão entre parenteses. Neste caso, internamente funciona a mesma regra: o primeiro nodo recebe as mensagens seguintes<br />
-um nodo string ao receber um outro nodo string, é concatenado.</br>
-por padrão, um nodo numérico, ao receber outro nodo numérico é somado</br>
-a primeira mensagem recebida determina se o nodo será numérico ou texto.<br />
-nodo1 "2" 2 -> "22"<br />
-nodo2 2 "2" -> 4 <br />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript" src="vm/graphol/lang/nodo.js"></script>
+    <script type="text/javascript" src="vm/graphol/lang/base.js"></script>
+    <script type="text/javascript" src="vm/graphol/lang/number.js"></script>
+    <script type="text/javascript" src="vm/graphol/lang/string.js"></script>
+    <script type="text/javascript" src="vm/graphol/lang/block.js"></script>
+    <script type="text/javascript" src="vm/graphol/lang/message/run.js"></script>
+    <script type="text/javascript" src="vm/graphol/command/echo.js"></script>
+    <script type="text/javascript" src="vm/graphol/command/input.js"></script>
+    <script type="text/javascript" src="vm/graphol.js"></script>
+    <script type="text/javascript" src="vm/grapholvm.js"></script>
+    <script type="text/javascript" src="compiler/compiler.js"></script>
+    <script type="text/javascript">
+        vm = new grapholVm();
+        gc = new grapholCompiler(vm);
+    </script>
+    <body>
+        <h1>Protótipo Graphol</h1>
+        <h2>REGRAS BÁSICAS</h2>
+        Uma expressão é formada por um nodo seguido, opcionalmente por um ou mais: NODO1 NODO2 NODO3 ... NODON</br>
+        Isto significa que NODO1 receberá como mensagem os NODOS seguintes e os tratará individualmente.</br>
+        Eventualmente um nodo é formado por uma expressão entre parenteses. Neste caso, internamente funciona a mesma regra: o primeiro nodo recebe as mensagens seguintes<br />
+        um nodo string ao receber um outro nodo string, é concatenado.</br>
+        por padrão, um nodo numérico, ao receber outro nodo numérico é somado</br>
+        a primeira mensagem recebida determina se o nodo será numérico ou texto.<br />
+        nodo1 "2" 2 -> "22"<br />
+        nodo2 2 "2" -> 4 <br />
 
-<textarea id=code cols=80 rows=15>
+        <textarea id=code cols=80 rows=15>
 nome (input "Qual é seu nome?")
 num1 2
 num2 2
@@ -39,10 +39,10 @@ teste run
 num3 3 3 3
 echo "v" nome num3
 echo ("v" nome num3)
-</textarea>
-<input type=button onclick='vm.clear(); gc.parser(document.getElementById("code").value); document.getElementById("codeJs").value=gc.getOut();vm.exec(); ' value="Executa"/>
-<textarea id=codeJs cols=80 rows=15>
+        </textarea>
+        <input type=button onclick='vm.clear(); gc.parser(document.getElementById("code").value); document.getElementById("codeJs").value=gc.getOut();vm.exec(); ' value="Executa"/>
+        <textarea id=codeJs cols=80 rows=15>
 
-</textarea>
-</body>
+        </textarea>
+    </body>
 </html>
