@@ -1,7 +1,7 @@
 function grapholVm() {
     var p_blocks = new Array();
     var p_end = true;
-    var p_IR  = {BASE:0,ADDR:-1};
+    var p_IR  = {BASE:0,ADDR:-1, SCOPE:null, PARENT:null};
     var p_stack = new Array();
     var self = this;
     var graphol = null;
@@ -30,7 +30,7 @@ function grapholVm() {
     this.exec = function() {
         graphol = new CGraphol();
         p_end = false;
-        p_IR = {BASE:0,ADDR:-1};
+        p_IR = {BASE:0,ADDR:-1,SCOPE:graphol, PARENT:null};
 
         while (!p_end) {
             p_IR.ADDR++;
@@ -44,12 +44,13 @@ function grapholVm() {
     
     this.call = function(pidBlock) {
         p_stack.push(p_IR);
-        p_IR = {BASE:pidBlock,ADDR:-1};
-        
+        graphol = new CGraphol();
+        p_IR = {BASE:pidBlock,ADDR:-1,SCOPE:graphol, PARENT:p_IR.BASE};
     }
     
     this.callback = function() {
-        p_IR = p_stack.pop();    
+        p_IR = p_stack.pop();  
+        graphol = p_IR.SCOPE;
     }
     
     this.endExec = function() {
