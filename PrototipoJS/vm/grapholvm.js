@@ -14,6 +14,9 @@ function grapholVm() {
         instructions = p_blocks[idBlock];
         instructions[instructions.length] = psInstruction;
     }
+    this.getNewBlockId = function() {
+       return p_blocks.length; 
+    }
     
     /*******************************************************************************
      *$FC exec Executar

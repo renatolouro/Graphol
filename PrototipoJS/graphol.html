@@ -28,19 +28,20 @@
         nodo2 2 "2" -> 4 <br />
 
         <textarea id=code cols=80 rows=15>
-nome (input "Qual é seu nome?")
-num1 2
-num2 2
-echo ("Olá " nome "!") ("Voce sabia que " num1 "+" num2 "=" (soma num1 num2) "?")
-teste {
-soma 5 5
-echo ("aqui a soma é:" soma)
-num3 2 2}
-teste run
-echo ("Já aqui continua sendo:" soma)
-num3 3 3 3
-echo "v" nome num3
-echo ("v" nome num3)
+foo {
+    echo "FOO"
+}
+
+bar {
+    echo "BAR"
+    foo {
+       echo "Este Foo é um BAZ"
+    }
+    foo run
+}
+
+bar run
+foo run  
         </textarea>
         <input type=button onclick='vm.clear(); gc.parser(document.getElementById("code").value); document.getElementById("codeJs").value=gc.getOut();vm.exec(); ' value="Executa"/>
         <textarea id=codeJs cols=80 rows=15>

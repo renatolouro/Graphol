@@ -238,16 +238,17 @@ function grapholCompiler(pVm) {
            
             if (psCode.charAt(p_iPos) == '{') {
                 p_iPos++;
+                var idBlock = p_vm.getNewBlockId();
                 var gc=new grapholCompiler(p_vm);
-                out("/* Inicio BLOCO " + (p_idBloco+1) + "*/ \n");
-                sNodo = gc.processaBloco(psCode, p_idBloco+1, p_iPos);
+                out("/* Inicio BLOCO " + (idBlock) + "*/ \n");
+                sNodo = gc.processaBloco(psCode, idBlock, p_iPos);
                 p_out = p_out + gc.getOut();
                 p_iPos = gc.getPos();
-                out("/* Fim BLOCO " + (p_idBloco+1) + "*/ \n");
+                out("/* Fim BLOCO " + (idBlock) + "*/ \n");
 
-                out("block" + (p_idBloco+1) + "=new strategy_Block(" + (p_idBloco+1) + ");\n");
-                out("block" + (p_idBloco+1) + ".setVm(self);\n");
-                sNodo = "block" + (p_idBloco+1);
+                out("block" + (idBlock) + "=new strategy_Block(" + (idBlock) + ");\n");
+                out("block" + (idBlock) + ".setVm(self);\n");
+                sNodo = "block" + (idBlock);
             //sNodo = new nodoParser("block" + (p_idBloco+1), "block");
             }
             else if (psCode.charAt(p_iPos) == '(') {
