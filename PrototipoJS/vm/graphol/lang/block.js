@@ -17,7 +17,7 @@ function strategy_Block(pidBlock) {
     }
 
     this.exec = function() {
-        p_vm.call(this.value);
+        p_vm.call(this);
        
     }
 
@@ -27,4 +27,7 @@ function strategy_Block(pidBlock) {
     this.setVm = function(pVm) {
         p_vm=pVm;
     };
+    this.getId = function() {
+        return this.value;
+    }
 }

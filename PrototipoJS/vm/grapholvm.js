@@ -42,10 +42,10 @@ function grapholVm() {
         p_blocks = new Array();
     }
     
-    this.call = function(pidBlock) {
+    this.call = function(pBlock) {
         p_stack.push(p_IR);
         graphol = new CGraphol();
-        p_IR = {BASE:pidBlock,ADDR:-1,SCOPE:graphol, PARENT:p_IR.BASE};
+        p_IR = {BASE:pBlock.getId(),ADDR:-1,SCOPE:graphol, PARENT:p_IR.BASE};
     }
     
     this.callback = function() {
