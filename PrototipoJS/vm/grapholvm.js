@@ -48,6 +48,7 @@ function grapholVm() {
     this.call = function(pBlock) {
         p_stack.push(p_IR);
         graphol = new CGraphol();
+        graphol.set("inbox",pBlock.inbox);
         p_IR = {BASE:pBlock.getId(),ADDR:-1,SCOPE:graphol, PARENT:p_IR.BASE};
     }
     

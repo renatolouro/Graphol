@@ -3,9 +3,14 @@ function strategy_Block(pidBlock) {
     var p_vm;
     this.name = "";
     this.value = pidBlock;
+    this.inbox = new Nodo();
 
     this.receive = function(pValue) {
-        if(pValue.getMessage()=="run") this.exec();
+        if(pValue.getMessage!=null && pValue.getMessage()=="run") this.exec();
+        else {
+           this.inbox = new Nodo();
+           this.inbox.receive(pValue);
+        }
     }
 
     this.tonumber = function() {

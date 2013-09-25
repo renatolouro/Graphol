@@ -1,4 +1,4 @@
-function CGraphol(pThreads) {
+function CGraphol() {
     var nodos = new Object;
 
     nodos["input"] = new Input();
@@ -11,5 +11,8 @@ function CGraphol(pThreads) {
             nodos[pKey] = new Nodo();
 
         return nodos[pKey];
+    }
+    this.set = function(pKey, pValue) {
+        nodos[pKey] = pValue;
     }
 }
