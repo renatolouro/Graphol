@@ -4,6 +4,7 @@ function CGraphol() {
     nodos["input"] = new Input();
     nodos["echo"] = new Echo();
     nodos["run"] = new Run();
+    nodos["async"] = new Run();
 
     this.get = function(pKey)
     {
