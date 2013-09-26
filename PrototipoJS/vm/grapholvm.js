@@ -50,6 +50,7 @@ function grapholVm() {
     
     this.call = function(pBlock) {
         var thread=getCurrThread();
+        thread.IR.SCOPE = thread.SCOPE;
         thread.STACK.push(thread.IR);
         thread.SCOPE = new CGraphol();
         thread.SCOPE.set("inbox",pBlock.inbox);
