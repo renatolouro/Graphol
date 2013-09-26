@@ -37,7 +37,7 @@ function grapholVm() {
 
         while (!p_end) {
             thread=nextThread();
-            graphol=thread.SCOPE;
+            graphol=thread.IR.SCOPE;
             thread.IR.ADDR++;
             eval(p_blocks[thread.IR.BASE][thread.IR.ADDR]);
         }
@@ -49,23 +49,26 @@ function grapholVm() {
     }
     
     this.call = function(pBlock) {
-        var thread=getCurrThread();
-        thread.IR.SCOPE = thread.SCOPE;
-        thread.STACK.push(thread.IR);
-        thread.SCOPE = new CGraphol();
-        thread.SCOPE.set("inbox",pBlock.inbox);
-        thread.IR = {
-            BASE:pBlock.getId(),
-            ADDR:-1,
-            SCOPE:thread.SCOPE, 
-            PARENT:thread.IR.BASE
+        var thread;
+        if(pBlock.isAsync()) newThread();
+        
+        thread=getCurrThread();
+        if(pBlock.isSync()){
+            thread.STACK.push(thread.IR);
+            thread.IR = {
+                BASE:pBlock.getId(),
+                ADDR:-1,
+                SCOPE: new CGraphol(),
+                PARENT:thread.IR.BASE
             };
+        }
+        thread.IR.SCOPE.set("inbox",pBlock.inbox);
     }
+    
     
     this.callback = function() {
         var thread=getCurrThread();
         thread.IR = thread.STACK.pop();  
-        thread.SCOPE = thread.IR.SCOPE;
     }
     
     var newThread = function() {
@@ -76,9 +79,8 @@ function grapholVm() {
                 SCOPE: new CGraphol(),
                 PARENT:null
             },
-            SCOPE: new CGraphol(),
             STACK: new Array()
-            } 
+        } 
         p_threads[p_threads.length] = thread;   
     }
     

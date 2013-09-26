@@ -1,6 +1,7 @@
 function strategy_Block(pidBlock) {
     var p_mytype = "block";
     var p_vm;
+    var p_isSync = true;
     this.name = "";
     this.value = pidBlock;
     this.inbox = new Nodo();
@@ -34,5 +35,11 @@ function strategy_Block(pidBlock) {
     };
     this.getId = function() {
         return this.value;
+    }
+    this.isSync = function() {
+        return p_isSync;
+    }
+        this.isAsync = function() {
+        return !p_isSync;
     }
 }
