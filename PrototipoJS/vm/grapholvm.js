@@ -50,9 +50,8 @@ function grapholVm() {
     
     this.call = function(pBlock) {
         var thread;
-        if(pBlock.isAsync()) newThread();
-        
-        thread=getCurrThread();
+        if(pBlock.isAsync()) thread=newThread();
+        else thread=getCurrThread();
         if(pBlock.isSync()){
             thread.STACK.push(thread.IR);
             thread.IR = {
@@ -61,14 +60,15 @@ function grapholVm() {
                 SCOPE: new CGraphol(),
                 PARENT:thread.IR.BASE
             };
-        }
+        } else thread.IR.BASE = pBlock.getId();
         thread.IR.SCOPE.set("inbox",pBlock.inbox);
     }
     
     
     this.callback = function() {
         var thread=getCurrThread();
-        thread.IR = thread.STACK.pop();  
+        if(thread.STACK.length>0) thread.IR = thread.STACK.pop();
+        else removeThread();
     }
     
     var newThread = function() {
@@ -81,7 +81,12 @@ function grapholVm() {
             },
             STACK: new Array()
         } 
-        p_threads[p_threads.length] = thread;   
+        p_threads[p_threads.length] = thread;  
+        return thread;
+    }
+    
+    var removeThread = function(){
+        p_threads.splice(p_currThread,1);
     }
     
     var nextThread = function() {
