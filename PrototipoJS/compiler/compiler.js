@@ -164,15 +164,15 @@ function grapholCompiler(pVm) {
         var sNodo = "";
         if (ehNodo1Caracter(psCode.charAt(p_iPos))) {
             if (pbIsRoot)
-                out("operator" + p_cntNodoLin + "=new Nodo(); operator" + p_cntNodoLin + ".receive(new strategy_Operator(\"" + psCode.charAt(p_iPos) + "\"));\n");
+                out("graphol.operator" + p_cntNodoLin + "=new Nodo(); graphol.operator" + p_cntNodoLin + ".receive(new strategy_Operator(\"" + psCode.charAt(p_iPos) + "\"));\n");
             else
-                out("operator" + p_cntNodoLin + "=new strategy_Operator(\"" + psCode.charAt(p_iPos) + "\");\n");
-            return new nodoParser("operator" + p_cntNodoLin, "operator");
+                out("graphol.operator" + p_cntNodoLin + "=new strategy_Operator(\"" + psCode.charAt(p_iPos) + "\");\n");
+            return new nodoParser("graphol.operator" + p_cntNodoLin, "operator");
         }
         if (psCode.charAt(p_iPos) == '"') {
             p_cntNodoLin++;
-            out("text" + p_cntNodoLin + "=\"" + processaString(psCode) + "\";\n")
-            return new nodoParser("text" + p_cntNodoLin, "string");
+            out("graphol.text" + p_cntNodoLin + "=\"" + processaString(psCode) + "\";\n")
+            return new nodoParser("graphol.text" + p_cntNodoLin, "string");
         }
         while (p_iPos < psCode.length &&
             !ehFinalizadorDeNome(psCode.charAt(p_iPos)))
@@ -185,8 +185,8 @@ function grapholCompiler(pVm) {
 
         if (pbIsRoot || (!isNaN(sNodo)))
             return sNodo;
-        out("arg" + piNivel + "=graphol.get(\"" + sNodo + "\");\n");
-        return "arg" + piNivel
+        out("graphol.arg" + piNivel + "=graphol.get(\"" + sNodo + "\");\n");
+        return "graphol.arg" + piNivel
     }
 
     /*******************************************************************************
@@ -246,9 +246,9 @@ function grapholCompiler(pVm) {
                 p_iPos = gc.getPos();
                 out("/* Fim BLOCO " + (idBlock) + "*/ \n");
 
-                out("block" + (idBlock) + "=new strategy_Block(" + (idBlock) + ");\n");
-                out("block" + (idBlock) + ".setVm(self);\n");
-                sNodo = "block" + (idBlock);
+                out("graphol.block" + (idBlock) + "=new strategy_Block(" + (idBlock) + ");\n");
+                out("graphol.block" + (idBlock) + ".setVm(self);\n");
+                sNodo = "graphol.block" + (idBlock);
             //sNodo = new nodoParser("block" + (p_idBloco+1), "block");
             }
             else if (psCode.charAt(p_iPos) == '(') {
@@ -265,29 +265,29 @@ function grapholCompiler(pVm) {
             if (sNodoReciver == "") {
                 if (typeof(sNodo) == 'object') {
                     if (sNodo.type == 'string')
-                        out("nodo" + piNivel + "=new Nodo()\nnodo" + piNivel + ".receive(" + sNodo.value + ")\n");
+                        out("graphol.nodo" + piNivel + "=new Nodo()\ngraphol.nodo" + piNivel + ".receive(" + sNodo.value + ")\n");
                     else
-                        out("nodo" + piNivel + "=" + sNodo.value + ";\n")
+                        out("graphol.nodo" + piNivel + "=" + sNodo.value + ";\n")
                 }
                 else if (!isNaN(sNodo))
-                    out("nodo" + piNivel + "=new Nodo()\nnodo" + piNivel + ".receive(" + sNodo + ")\n");
+                    out("graphol.nodo" + piNivel + "=new Nodo()\ngraphol.nodo" + piNivel + ".receive(" + sNodo + ")\n");
                 else if (bSubExpressao)
-                    out("nodo" + piNivel + "=" + sNodo + ";\n");
+                    out("graphol.nodo" + piNivel + "=" + sNodo + ";\n");
                 else
-                    out("nodo" + piNivel + "=graphol.get(\"" + sNodo + "\");\n");
+                    out("graphol.nodo" + piNivel + "=graphol.get(\"" + sNodo + "\");\n");
 
                 if (typeof(sNodo) == 'object')
                     sNodoReciver = sNodo.value;
                 else if (!isNaN(sNodo))
-                    sNodoReciver = "nodo" + piNivel;
+                    sNodoReciver = "graphol.nodo" + piNivel;
                 else
                     sNodoReciver = sNodo;
             }
             else {
                 if (typeof(sNodo) == 'object')
-                    out("nodo" + piNivel + ".receive(" + sNodo.value + ");\n");
+                    out("graphol.nodo" + piNivel + ".receive(" + sNodo.value + ");\n");
                 else
-                    out("nodo" + piNivel + ".receive(" + sNodo + ");\n");
+                    out("graphol.nodo" + piNivel + ".receive(" + sNodo + ");\n");
             }
             
             p_iPos++;
@@ -301,7 +301,7 @@ function grapholCompiler(pVm) {
                 ))
             throw "Err1";
         else {
-            return "nodo" + piNivel;
+            return "graphol.nodo" + piNivel;
         }
 
     }
@@ -353,7 +353,7 @@ function grapholCompiler(pVm) {
             p_iPos++;
         }
         p_iPos = 0;
-        out("endExec();\n");
+        out("self.endExec();\n");
     }
 
     this.getOut = function() {

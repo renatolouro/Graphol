@@ -1,10 +1,9 @@
 function grapholVm() {
-    var p_blocks = new Array();
+    var p_blocks = new Array(); //Armazena o código compilado dividido em blocos
+    var p_threads = new Array(); //Armazena as várias linhas de execução
+    var p_currThread = -1;
     var p_end = true;
-    var p_IR  = {BASE:0,ADDR:-1, SCOPE:null, PARENT:null};
-    var p_stack = new Array();
     var self = this;
-    var graphol = null;
     
     this.registerInstruction = function(psInstruction, pidBlock) {
         var idBlock = 0;
@@ -15,7 +14,7 @@ function grapholVm() {
         instructions[instructions.length] = psInstruction;
     }
     this.getNewBlockId = function() {
-       return p_blocks.length; 
+        return p_blocks.length; 
     }
     
     /*******************************************************************************
@@ -31,30 +30,73 @@ function grapholVm() {
      *
      *******************************************************************************/
     this.exec = function() {
-        graphol = new CGraphol();
+        var thread;
+        var graphol;
         p_end = false;
-        p_IR = {BASE:0,ADDR:-1,SCOPE:graphol, PARENT:null};
+        newThread();
 
         while (!p_end) {
-            p_IR.ADDR++;
-            eval(p_blocks[p_IR.BASE][p_IR.ADDR]);
+            thread=nextThread();
+            graphol=thread.IR.SCOPE;
+            thread.IR.ADDR++;
+            eval(p_blocks[thread.IR.BASE][thread.IR.ADDR]);
         }
     }
     
     this.clear = function() {
         p_blocks = new Array();
+        p_threads = new Array();
     }
     
     this.call = function(pBlock) {
-        p_stack.push(p_IR);
-        graphol = new CGraphol();
-        graphol.set("inbox",pBlock.inbox);
-        p_IR = {BASE:pBlock.getId(),ADDR:-1,SCOPE:graphol, PARENT:p_IR.BASE};
+        var thread;
+        if(pBlock.isAsync()) thread=newThread();
+        else thread=getCurrThread();
+        if(pBlock.isSync()){
+            thread.STACK.push(thread.IR);
+            thread.IR = {
+                BASE:pBlock.getId(),
+                ADDR:-1,
+                SCOPE: new CGraphol(),
+                PARENT:thread.IR.BASE
+            };
+        } else thread.IR.BASE = pBlock.getId();
+        thread.IR.SCOPE.set("inbox",pBlock.inbox);
     }
     
+    
     this.callback = function() {
-        p_IR = p_stack.pop();  
-        graphol = p_IR.SCOPE;
+        var thread=getCurrThread();
+        if(thread.STACK.length>0) thread.IR = thread.STACK.pop();
+        else removeThread();
+    }
+    
+    var newThread = function() {
+        var thread = {
+            IR: {
+                BASE:0,
+                ADDR:-1, 
+                SCOPE: new CGraphol(),
+                PARENT:null
+            },
+            STACK: new Array()
+        } 
+        p_threads[p_threads.length] = thread;  
+        return thread;
+    }
+    
+    var removeThread = function(){
+        p_threads.splice(p_currThread,1);
+    }
+    
+    var nextThread = function() {
+        p_currThread++;
+        if(p_currThread>=p_threads.length) p_currThread=0;
+        return p_threads[p_currThread];
+    }
+    
+    var getCurrThread = function() {
+        return p_threads[p_currThread];
     }
     
     this.endExec = function() {
