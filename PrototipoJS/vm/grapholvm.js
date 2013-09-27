@@ -4,6 +4,7 @@ function grapholVm() {
     var p_currThread = -1;
     var p_end = true;
     var self = this;
+    var stdout = new Stdout();
     
     this.registerInstruction = function(psInstruction, pidBlock) {
         var idBlock = 0;
@@ -57,7 +58,7 @@ function grapholVm() {
             thread.IR = {
                 BASE:pBlock.getId(),
                 ADDR:-1,
-                SCOPE: new CGraphol(),
+                SCOPE: new CGraphol(stdout),
                 PARENT:thread.IR.BASE
             };
         } else thread.IR.BASE = pBlock.getId();
@@ -76,7 +77,7 @@ function grapholVm() {
             IR: {
                 BASE:0,
                 ADDR:-1, 
-                SCOPE: new CGraphol(),
+                SCOPE: new CGraphol(stdout),
                 PARENT:null
             },
             STACK: new Array()
