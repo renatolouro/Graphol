@@ -1,9 +1,10 @@
-function CGraphol() {
+function CGraphol(stdout) {
     var nodos = new Object;
 
     nodos["input"] = new Input();
-    nodos["echo"] = new Echo();
     nodos["run"] = new Run();
+    nodos["stdout"] = stdout;
+    nodos["echo"] = new Echo(nodos["stdout"]);
     nodos["async"] = new Async();
 
     this.get = function(pKey)
