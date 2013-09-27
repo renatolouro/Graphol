@@ -2,9 +2,10 @@ function CGraphol() {
     var nodos = new Object;
 
     nodos["input"] = new Input();
-    nodos["echo"] = new Echo();
     nodos["run"] = new Run();
-
+    nodos["stdout"] = new Stdout();
+    nodos["echo"] = new Echo(nodos["stdout"]);
+    
     this.get = function(pKey)
     {
         if (nodos[pKey] == null)
