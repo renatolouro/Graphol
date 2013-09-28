@@ -23,4 +23,8 @@ function Nodo() {
     this.getType = function() {
         return Strategy.getType();
     }
+    this.toBoolean = function() {
+        if(Strategy != null && Strategy.toBoolean != null) return Strategy.toBoolean();
+        return false; 
+}
 }
