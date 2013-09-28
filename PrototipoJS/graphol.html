@@ -4,11 +4,13 @@
     <script type="text/javascript" src="vm/graphol/lang/base.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/number.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/string.js"></script>
+    <script type="text/javascript" src="vm/graphol/lang/boolean.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/block.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/message/run.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/message/async.js"></script>
     <script type="text/javascript" src="vm/graphol/command/echo.js"></script>
     <script type="text/javascript" src="vm/graphol/command/input.js"></script>
+    <script type="text/javascript" src="vm/graphol/command/if.js"></script>
     <script type="text/javascript" src="vm/graphol/command/stdout/core.js"></script>
     <script type="text/javascript" src="vm/graphol/command/stdout/alert.js"></script>
     <script type="text/javascript" src="vm/graphol/command/stdout/console.js"></script>
@@ -32,44 +34,13 @@
         nodo2 2 "2" -> 4 <br />
 
         <textarea id=code cols=80 rows=15>
-stdout "alert"
-foo {
-    echo "FOO"
-    echo "FOOO"
-    echo "FOOOO"
-    echo "FOOOOO"
-    echo "FOOOOOO"
-    echo "FOOOOOOO"
-    echo "FOOOOOOOO"
-    echo "FOOOOOOOOO"
+echo "Testando o IF"
 
-}
-
-bar {
-    echo "BAR"
-    echo "BARR"
-    echo "BARRR"
-    echo "BARRRR"
-    echo "BARRRRR"
-    echo "BARRRRRR"
-    echo "BARRRRRRR"
-    echo "BARRRRRRRR"
-}
-
-baz {
-    echo "BAZ"
-    echo "BZZZ"
-    echo "BAZZZ"
-    echo "BAZZZZ"
-    echo "BAZZZZZ"
-    echo "BAZZZZZZ"
-    echo "BAZZZZZZZ"
-    echo "BAZZZZZZZZ"
-}
-
-foo async run
-bar async run
-baz run
+if true {
+      echo "Isto tem que ser mostrado"
+ } false {
+      echo "Isto não"
+ } run
  
         </textarea>
         <input type=button onclick='vm.clear(); gc.parser(document.getElementById("code").value); document.getElementById("codeJs").value=gc.getOut();vm.exec(); ' value="Executa"/>

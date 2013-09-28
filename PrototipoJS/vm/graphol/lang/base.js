@@ -54,6 +54,8 @@ function strategy_Factory(pValue) {
         if (pValue['getType'] != null) {
             if (pValue.getType() == "block")
                 Strategy = pValue;
+            else if (pValue.getType() == "boolean")
+                Strategy = new strategy_Boolean(pValue.toBoolean());
             else if (pValue.getType() == "number")
                 Strategy = new strategy_Number(pValue.tonumber());
             else if (pValue.getType() == "operator") {
@@ -70,6 +72,8 @@ function strategy_Factory(pValue) {
     }
     else if (typeof(pValue) == 'string')
         Strategy = new strategy_String(pValue);
+    else if (typeof(pValue) == 'boolean')
+        Strategy = new strategy_Boolean(pValue);
     else if (!isNaN(pValue))
         Strategy = new strategy_Number(pValue);
     else

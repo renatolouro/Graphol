@@ -183,7 +183,7 @@ function grapholCompiler(pVm) {
         if (ehFinalizadorDeNome(psCode.charAt(p_iPos)))
             p_iPos--;
 
-        if (pbIsRoot || (!isNaN(sNodo)))
+        if (pbIsRoot || (!isNaN(sNodo))|| sNodo == "true" || sNodo == "false" )
             return sNodo;
         out("graphol.arg" + piNivel + "=graphol.get(\"" + sNodo + "\");\n");
         return "graphol.arg" + piNivel

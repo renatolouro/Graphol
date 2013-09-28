@@ -6,6 +6,7 @@ function CGraphol(stdout) {
     nodos["stdout"] = stdout;
     nodos["echo"] = new Echo(nodos["stdout"]);
     nodos["async"] = new Async();
+    nodos["if"] = new If();
 
     this.get = function(pKey)
     {
