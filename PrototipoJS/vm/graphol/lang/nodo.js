@@ -11,7 +11,11 @@ function Nodo() {
     this.exec = function() {
         Strategy.exec();
     }
-
+    
+    this.end = function() {
+        if(Strategy.end!=null)  Strategy.end();
+    }
+    
     this.tonumber = function() {
         return Strategy.tonumber();
     }
@@ -26,5 +30,5 @@ function Nodo() {
     this.toBoolean = function() {
         if(Strategy != null && Strategy.toBoolean != null) return Strategy.toBoolean();
         return false; 
-}
+    }
 }

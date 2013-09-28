@@ -35,6 +35,11 @@ function If() {
     }
 
     this.exec = function() {
+
+
+    }
+    
+    this.end = function() {
         for(var i=0; i<this.cases.length;i++) {
             if(this.cases[i].cond.toBoolean !=null && this.cases[i].cond.toBoolean()) this.cases[i].block.exec();
             else if(this.cases[i].cond) this.cases[i].block.exec();
@@ -44,7 +49,6 @@ function If() {
         this.cases=new Array();
         this.elseBlock = null;
         this.state = 0;
-
     }
 
     this.getType = function() {

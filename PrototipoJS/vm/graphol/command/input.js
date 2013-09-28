@@ -20,6 +20,10 @@ function Input() {
     this.exec = function() {
 
     }
+    
+    this.end = function() {
+
+    }
 
     this.getType = function() {
         return p_mytype;

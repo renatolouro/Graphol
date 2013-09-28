@@ -301,6 +301,7 @@ function grapholCompiler(pVm) {
                 ))
             throw "Err1";
         else {
+            if(sNodoReciver!="") out("graphol.nodo" + piNivel + ".end(); \n");
             return "graphol.nodo" + piNivel;
         }
 
