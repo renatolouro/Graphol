@@ -6,18 +6,6 @@ function grapholVm() {
     var self = this;
     var stdout = new Stdout();
     
-    this.registerInstruction = function(psInstruction, pidBlock) {
-        var idBlock = 0;
-        var instructions = null;
-        if(pidBlock!=null) idBlock = pidBlock;
-        if(idBlock>=p_blocks.length) p_blocks[idBlock] = new Array();
-        instructions = p_blocks[idBlock];
-        instructions[instructions.length] = psInstruction;
-    }
-    this.getNewBlockId = function() {
-        return p_blocks.length; 
-    }
-    
     /*******************************************************************************
      *$FC exec Executar
      *
@@ -40,7 +28,7 @@ function grapholVm() {
             thread=nextThread();
             graphol=thread.IR.SCOPE;
             thread.IR.ADDR++;
-            eval(p_blocks[thread.IR.BASE][thread.IR.ADDR]);
+            eval(p_blocks[thread.IR.ADDR]);
         }
     }
     
@@ -53,15 +41,14 @@ function grapholVm() {
         var thread;
         if(pBlock.isAsync()) thread=newThread();
         else thread=getCurrThread();
-        if(pBlock.isSync()){
-            thread.STACK.push(thread.IR);
-            thread.IR = {
-                BASE:pBlock.getId(),
-                ADDR:-1,
-                SCOPE: new CGraphol(stdout),
-                PARENT:thread.IR.BASE
-            };
-        } else thread.IR.BASE = pBlock.getId();
+        thread.STACK.push(thread.IR);
+        thread.IR = {
+            BASE:pBlock.getId()-1,
+            ADDR:pBlock.getId()-2,
+            SCOPE: new CGraphol(stdout),
+            PARENT:thread.IR.BASE
+        };
+     
         thread.IR.SCOPE.set("inbox",pBlock.inbox);
     }
     
@@ -70,6 +57,13 @@ function grapholVm() {
         var thread=getCurrThread();
         if(thread.STACK.length>0) thread.IR = thread.STACK.pop();
         else removeThread();
+    }
+    
+    this.JMP = function(ADDR) {
+        var thread=getCurrThread(); 
+        thread.IR.ADDR = ADDR-2; 
+    //-- pois o while que itera sobre as instruções já realiza um ++
+    //-- pois Array começa em 0 e a contagem de linhas em 1
     }
     
     var newThread = function() {
@@ -102,6 +96,11 @@ function grapholVm() {
     
     this.endExec = function() {
         p_end=true;
+    }
+    
+    this.load = function(psCode) {
+        this.clear();
+        p_blocks=psCode.split("\n")
     }
     
 }

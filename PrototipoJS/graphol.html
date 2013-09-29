@@ -19,7 +19,7 @@
     <script type="text/javascript" src="compiler/compiler.js"></script>
     <script type="text/javascript">
         vm = new grapholVm();
-        gc = new grapholCompiler(vm);
+        gc = new grapholCompiler();
     </script>
     <body>
         <h1>Protótipo Graphol</h1>
@@ -43,7 +43,9 @@ if true {
  }
  
         </textarea>
-        <input type=button onclick='vm.clear(); gc.parser(document.getElementById("code").value); document.getElementById("codeJs").value=gc.getOut();vm.exec(); ' value="Executa"/>
+        <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); vm.load(document.getElementById("codeJs").value); vm.exec(); ' value="Compila e Executa"/>
+        <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); ' value="Compila"/>
+        <input type=button onclick='vm.load(document.getElementById("codeJs").value); vm.exec(); ' value="Executa"/>
         <textarea id=codeJs cols=80 rows=15>
 
         </textarea>

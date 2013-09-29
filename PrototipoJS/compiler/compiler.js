@@ -1,10 +1,8 @@
-function grapholCompiler(pVm) {
-    var p_vm = pVm;
+function grapholCompiler() {
     var p_iPos = 0;
-    var p_idBloco = 0;
-    var p_out = "";
     var p_cntNodoLin = 0;
-    var p_cntParentLin = 0;
+    var p_code = new Array();
+    var p_childrensCode = new Array()
 
     var ehFinalizadorDeNome = function(psCaracter) {
         return(psCaracter == "\n"
@@ -33,8 +31,7 @@ function grapholCompiler(pVm) {
     }
 
     var out = function(psOut) {
-        p_out = p_out + psOut;
-        p_vm.registerInstruction(psOut, p_idBloco);
+        p_code[p_code.length]=psOut;
     }
 
     /*******************************************************************************
@@ -164,14 +161,14 @@ function grapholCompiler(pVm) {
         var sNodo = "";
         if (ehNodo1Caracter(psCode.charAt(p_iPos))) {
             if (pbIsRoot)
-                out("graphol.operator" + p_cntNodoLin + "=new Nodo(); graphol.operator" + p_cntNodoLin + ".receive(new strategy_Operator(\"" + psCode.charAt(p_iPos) + "\"));\n");
+                out("graphol.operator" + p_cntNodoLin + "=new Nodo(); graphol.operator" + p_cntNodoLin + ".receive(new strategy_Operator(\"" + psCode.charAt(p_iPos) + "\"));");
             else
-                out("graphol.operator" + p_cntNodoLin + "=new strategy_Operator(\"" + psCode.charAt(p_iPos) + "\");\n");
+                out("graphol.operator" + p_cntNodoLin + "=new strategy_Operator(\"" + psCode.charAt(p_iPos) + "\");");
             return new nodoParser("graphol.operator" + p_cntNodoLin, "operator");
         }
         if (psCode.charAt(p_iPos) == '"') {
             p_cntNodoLin++;
-            out("graphol.text" + p_cntNodoLin + "=\"" + processaString(psCode) + "\";\n")
+            out("graphol.text" + p_cntNodoLin + "=\"" + processaString(psCode) + "\";")
             return new nodoParser("graphol.text" + p_cntNodoLin, "string");
         }
         while (p_iPos < psCode.length &&
@@ -185,7 +182,7 @@ function grapholCompiler(pVm) {
 
         if (pbIsRoot || (!isNaN(sNodo))|| sNodo == "true" || sNodo == "false" )
             return sNodo;
-        out("graphol.arg" + piNivel + "=graphol.get(\"" + sNodo + "\");\n");
+        out("graphol.arg" + piNivel + "=graphol.get(\"" + sNodo + "\");");
         return "graphol.arg" + piNivel
     }
 
@@ -238,18 +235,13 @@ function grapholCompiler(pVm) {
            
             if (psCode.charAt(p_iPos) == '{') {
                 p_iPos++;
-                var idBlock = p_vm.getNewBlockId();
-                var gc=new grapholCompiler(p_vm);
-                out("/* Inicio BLOCO " + (idBlock) + "*/ \n");
-                sNodo = gc.processaBloco(psCode, idBlock, p_iPos);
-                p_out = p_out + gc.getOut();
+                var idBlock = p_childrensCode.length + 1;
+                var gc=new grapholCompiler();
+                p_childrensCode = gc.processaBloco(psCode, p_iPos, p_childrensCode);
                 p_iPos = gc.getPos();
-                out("/* Fim BLOCO " + (idBlock) + "*/ \n");
-
-                out("graphol.block" + (idBlock) + "=new strategy_Block(" + (idBlock) + ");\n");
-                out("graphol.block" + (idBlock) + ".setVm(self);\n");
+                out("graphol.block" + (idBlock) + "=new strategy_Block(" + (idBlock) + ");");
+                out("graphol.block" + (idBlock) + ".setVm(self);");
                 sNodo = "graphol.block" + (idBlock);
-            //sNodo = new nodoParser("block" + (p_idBloco+1), "block");
             }
             else if (psCode.charAt(p_iPos) == '(') {
                 p_iPos++;
@@ -264,17 +256,21 @@ function grapholCompiler(pVm) {
             }
             if (sNodoReciver == "") {
                 if (typeof(sNodo) == 'object') {
-                    if (sNodo.type == 'string')
-                        out("graphol.nodo" + piNivel + "=new Nodo()\ngraphol.nodo" + piNivel + ".receive(" + sNodo.value + ")\n");
+                    if (sNodo.type == 'string') {
+                        out("graphol.nodo" + piNivel + "=new Nodo()");
+                        out("graphol.nodo" + piNivel + ".receive(" + sNodo.value + ")");
+                    }
                     else
-                        out("graphol.nodo" + piNivel + "=" + sNodo.value + ";\n")
+                        out("graphol.nodo" + piNivel + "=" + sNodo.value + ";")
                 }
-                else if (!isNaN(sNodo))
-                    out("graphol.nodo" + piNivel + "=new Nodo()\ngraphol.nodo" + piNivel + ".receive(" + sNodo + ")\n");
+                else if (!isNaN(sNodo)){
+                    out("graphol.nodo" + piNivel + "=new Nodo()");
+                    out("graphol.nodo" + piNivel + ".receive(" + sNodo + ")");
+                }
                 else if (bSubExpressao)
-                    out("graphol.nodo" + piNivel + "=" + sNodo + ";\n");
+                    out("graphol.nodo" + piNivel + "=" + sNodo + ";");
                 else
-                    out("graphol.nodo" + piNivel + "=graphol.get(\"" + sNodo + "\");\n");
+                    out("graphol.nodo" + piNivel + "=graphol.get(\"" + sNodo + "\");");
 
                 if (typeof(sNodo) == 'object')
                     sNodoReciver = sNodo.value;
@@ -285,9 +281,9 @@ function grapholCompiler(pVm) {
             }
             else {
                 if (typeof(sNodo) == 'object')
-                    out("graphol.nodo" + piNivel + ".receive(" + sNodo.value + ");\n");
+                    out("graphol.nodo" + piNivel + ".receive(" + sNodo.value + ");");
                 else
-                    out("graphol.nodo" + piNivel + ".receive(" + sNodo + ");\n");
+                    out("graphol.nodo" + piNivel + ".receive(" + sNodo + ");");
             }
             
             p_iPos++;
@@ -301,15 +297,17 @@ function grapholCompiler(pVm) {
                 ))
             throw "Err1";
         else {
-            if(sNodoReciver!="") out("graphol.nodo" + piNivel + ".end(); \n");
+            if(sNodoReciver!="") out("graphol.nodo" + piNivel + ".end();");
             return "graphol.nodo" + piNivel;
         }
 
     }
     
-    this.processaBloco = function(psCode, pidBloco, piPos) {
-        p_out = "";
-        p_idBloco = pidBloco;
+    this.processaBloco = function(psCode, piPos, pChildrensCode) {
+        var posHolder;
+        p_childrensCode = pChildrensCode;
+        posHolder = p_childrensCode.length;
+        p_childrensCode[posHolder] = "self.goto("+(p_childrensCode.length+1)+")"; //holder
         p_iPos = piPos;
         var endBlock = false;
         while (!endBlock)
@@ -320,7 +318,10 @@ function grapholCompiler(pVm) {
             else p_iPos++;
             if(p_iPos >= psCode.length) throw "Err2";
         }
-        out("self.callback();\n");
+        out("self.callback();");
+        p_childrensCode[posHolder] = "self.JMP("+(p_childrensCode.length+1)+")"; //holder
+        return p_childrensCode.concat(p_code);
+        
     }
 
     /*******************************************************************************
@@ -345,8 +346,12 @@ function grapholCompiler(pVm) {
      *      Ao Sair:   Tamanho do código fonte + 1
      *******************************************************************************/
     this.parser = function(psCode) {
-        p_out = "";
-        p_idBloco = 0;
+        p_iPos = 0;
+        p_cntNodoLin = 0;
+        p_code = new Array();
+        p_childrensCode = new Array()
+    
+        p_childrensCode[0] = "self.goto(1)"; //holder
         while (p_iPos < psCode.length)
         {
             consomeRuido(psCode);
@@ -354,11 +359,15 @@ function grapholCompiler(pVm) {
             p_iPos++;
         }
         p_iPos = 0;
-        out("self.endExec();\n");
+        out("self.endExec();");
+        p_childrensCode[0] = "self.JMP("+(p_childrensCode.length+1)+")"; //holder
+        p_childrensCode=p_childrensCode.concat(p_code);
+        return p_childrensCode.join("\n");
+        
     }
 
     this.getOut = function() {
-        return p_out;
+        return p_childrensCode.join("\n");
     }
     
     this.getPos = function() {
