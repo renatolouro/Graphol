@@ -18,6 +18,8 @@ function If() {
         } else if(this.state==1) {
             this.cases[this.cases.length-1].block=pValue;
             this.state = 0;                       
+            if(this.cases[this.cases.length-1].cond.toBoolean !=null && this.cases[this.cases.length-1].cond.toBoolean()) pValue.exec();
+            else if(this.cases[this.cases.length-1].cond) pValue.exec();
         } else if(this.state==3) {
             this.elseBlock = pValue; 
             this.state=0;
@@ -40,7 +42,7 @@ function If() {
     }
     
     this.end = function() {
-        for(var i=0; i<this.cases.length;i++) {
+        /*for(var i=0; i<this.cases.length;i++) {
             if(this.cases[i].cond.toBoolean !=null && this.cases[i].cond.toBoolean()) this.cases[i].block.exec();
             else if(this.cases[i].cond) this.cases[i].block.exec();
         }
@@ -48,7 +50,7 @@ function If() {
         
         this.cases=new Array();
         this.elseBlock = null;
-        this.state = 0;
+        this.state = 0;*/
     }
 
     this.getType = function() {
