@@ -9,6 +9,7 @@
     <script type="text/javascript" src="vm/graphol/lang/types/block.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/messages/run.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/messages/async.js"></script>
+    <script type="text/javascript" src="vm/graphol/lang/messages/else.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/commands/if.js"></script>
     <script type="text/javascript" src="vm/graphol/command/echo.js"></script>
     <script type="text/javascript" src="vm/graphol/command/input.js"></script>
@@ -37,11 +38,13 @@
         <textarea id=code cols=80 rows=15>
 echo "Testando o IF"
 
-if true {
-      echo "Isto tem que ser mostrado"
+if false {
+      echo "Isto é falso"
  } false {
-      echo "Isto não"
- }
+      echo "Isto não é verdade"
+ } else {
+      echo "Na verdade, sem verdades por aqui..."
+}
  
         </textarea>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); vm.load(document.getElementById("codeJs").value); vm.exec(); ' value="Compila e Executa"/>
