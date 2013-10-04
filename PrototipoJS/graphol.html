@@ -36,16 +36,18 @@
         nodo2 2 "2" -> 4 <br />
 
         <textarea id=code cols=80 rows=15>
-echo "Testando o IF"
-
-if false {
-      echo "Isto é falso"
- } false {
-      echo "Isto não é verdade"
- } else {
-      echo "Na verdade, sem verdades por aqui..."
+mostra{
+  x 10
+  echo ("alterei o x global para " x)
+  y 10
+  echo ("aqui y é apenas local com " y)
 }
- 
+x 0
+mostra run       
+y 4
+x 4 
+echo ("Aqui fora y, que no bloco foi criado só localmente, vale " y) 
+echo ("Já meu x vale " x) 
         </textarea>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); vm.load(document.getElementById("codeJs").value); vm.exec(); ' value="Compila e Executa"/>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); ' value="Compila"/>

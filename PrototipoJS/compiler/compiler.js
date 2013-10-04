@@ -241,6 +241,7 @@ function grapholCompiler() {
                 p_iPos = gc.getPos();
                 out("graphol.block" + (idBlock) + "=new strategy_Block(" + (idBlock) + ");");
                 out("graphol.block" + (idBlock) + ".setVm(self);");
+                out("graphol.block" + (idBlock) + ".setParentScope(graphol);");
                 sNodo = "graphol.block" + (idBlock);
             }
             else if (psCode.charAt(p_iPos) == '(') {
@@ -307,7 +308,7 @@ function grapholCompiler() {
         var posHolder;
         p_childrensCode = pChildrensCode;
         posHolder = p_childrensCode.length;
-        p_childrensCode[posHolder] = "self.goto("+(p_childrensCode.length+1)+")"; //holder
+        p_childrensCode[posHolder] = "self.JMP("+(p_childrensCode.length+1)+")"; //holder
         p_iPos = piPos;
         var endBlock = false;
         while (!endBlock)
@@ -349,7 +350,7 @@ function grapholCompiler() {
         p_iPos = 0;
         p_cntNodoLin = 0;
         p_code = new Array();
-        p_childrensCode = new Array()
+        p_childrensCode = new Array();
     
         p_childrensCode[0] = "self.goto(1)"; //holder
         while (p_iPos < psCode.length)

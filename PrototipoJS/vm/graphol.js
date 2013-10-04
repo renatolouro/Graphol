@@ -1,4 +1,4 @@
-function CGraphol(stdout) {
+function CGraphol(stdout, parent) {
     var nodos = new Object;
 
     nodos["input"] = new Input();
@@ -7,13 +7,21 @@ function CGraphol(stdout) {
     nodos["echo"] = new Echo(nodos["stdout"]);
     nodos["async"] = new Async();
     nodos["if"] = new If();
-        nodos["else"] = new Else();
+    nodos["else"] = new Else();
+    
+    this.find = function(pKey)
+    {
+        if (nodos[pKey] == null)
+            if(parent!=null) return parent.find(pKey);
+        return nodos[pKey];
+    }
 
     this.get = function(pKey)
     {
-        if (nodos[pKey] == null)
-            nodos[pKey] = new Nodo();
-
+        var value = null;
+        value = this.find(pKey);
+        if(value!=null) return value;
+        nodos[pKey] = new Nodo();
         return nodos[pKey];
     }
     this.set = function(pKey, pValue) {

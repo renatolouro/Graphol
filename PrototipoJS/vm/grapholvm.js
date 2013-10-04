@@ -45,7 +45,7 @@ function grapholVm() {
         thread.IR = {
             BASE:pBlock.getId()-1,
             ADDR:pBlock.getId()-2,
-            SCOPE: new CGraphol(stdout),
+            SCOPE: new CGraphol(stdout, pBlock.p_parentScope),
             PARENT:thread.IR.BASE
         };
      

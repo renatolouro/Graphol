@@ -5,13 +5,14 @@ function strategy_Block(pidBlock) {
     this.name = "";
     this.value = pidBlock;
     this.inbox = new Nodo();
+    this.p_parentScope;
 
     this.receive = function(pValue) {
         if(pValue.getMessage!=null && pValue.getMessage()=="run") this.exec();
         else if(pValue.getMessage!=null && pValue.getMessage()=="async") p_isSync=false;
         else {
-           this.inbox = new Nodo();
-           this.inbox.receive(pValue);
+            this.inbox = new Nodo();
+            this.inbox.receive(pValue);
         }
     }
 
@@ -34,13 +35,17 @@ function strategy_Block(pidBlock) {
     this.setVm = function(pVm) {
         p_vm=pVm;
     };
+    this.setParentScope = function(pParentScope) {
+        this.p_parentScope=pParentScope;
+    };
+    
     this.getId = function() {
         return this.value;
     }
     this.isSync = function() {
         return p_isSync;
     }
-        this.isAsync = function() {
+    this.isAsync = function() {
         return !p_isSync;
     }
 }
