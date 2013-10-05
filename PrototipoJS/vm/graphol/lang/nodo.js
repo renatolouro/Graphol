@@ -31,4 +31,8 @@ function Nodo() {
         if(Strategy != null && Strategy.toBoolean != null) return Strategy.toBoolean();
         return false; 
     }
+    
+    this.equals = function(pNodo) {
+
+    }
 }
