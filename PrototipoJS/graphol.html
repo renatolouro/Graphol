@@ -9,9 +9,7 @@
     <script type="text/javascript" src="vm/graphol/lang/types/block.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/booleanOperators/and.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/booleanOperators/logicOperator.js"></script>
-    <script type="text/javascript" src="vm/graphol/lang/booleanOperators/gt.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/booleanOperators/gteq.js"></script>
-    <script type="text/javascript" src="vm/graphol/lang/booleanOperators/lt.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/booleanOperators/lteq.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/booleanOperators/neq.js"></script>
     <script type="text/javascript" src="vm/graphol/lang/booleanOperators/not.js"></script>
@@ -35,8 +33,8 @@
     </script>
     <body>
         <h1>Protótipo Graphol</h1>
-        <h2>REGRAS BÁSICAS</h2>
-        Uma expressão é formada por um nodo seguido, opcionalmente por um ou mais: NODO1 NODO2 NODO3 ... NODON</br>
+        <h2 id="exeTitle">REGRAS BÁSICAS</h2>
+        <div id="exeText" >Uma expressão é formada por um nodo seguido, opcionalmente por um ou mais: NODO1 NODO2 NODO3 ... NODON</br>
         Isto significa que NODO1 receberá como mensagem os NODOS seguintes e os tratará individualmente.</br>
         Eventualmente um nodo é formado por uma expressão entre parenteses. Neste caso, internamente funciona a mesma regra: o primeiro nodo recebe as mensagens seguintes<br />
         um nodo string ao receber um outro nodo string, é concatenado.</br>
@@ -44,20 +42,23 @@
         a primeira mensagem recebida determina se o nodo será numérico ou texto.<br />
         nodo1 "2" 2 -> "22"<br />
         nodo2 2 "2" -> 4 <br />
-
+        </div>
         <textarea id=code cols=80 rows=15>
-mostra{
-  x 10
-  echo ("alterei o x global para " x)
-  y 10
-  echo ("aqui y é apenas local com " y)
+if (= 3 6){
+      echo "Isto é falso"
+ } (> 4 5) {
+      echo "Isto não é verdade"
+ } else {
+      echo "Na verdade, sem verdades por aqui..."
 }
-x 0
-mostra run       
-y 4
-x 4 
-echo ("Aqui fora y, que no bloco foi criado só localmente, vale " y) 
-echo ("Já meu x vale " x) 
+
+if (= 6 6){
+      echo "Já isso é verdade"
+ } (< 4 5) {
+      echo "E isto também é verdade"
+ } else {
+      echo "Já por aqui, só verdades..."
+}
         </textarea>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); vm.load(document.getElementById("codeJs").value); vm.exec(); ' value="Compila e Executa"/>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); ' value="Compila"/>

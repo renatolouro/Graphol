@@ -14,11 +14,12 @@ function If() {
             this.state = 1;
         } else if(this.state==1) {
             this.state = 0;                       
-            if(this.cond.toBoolean !=null && this.cond.toBoolean()) {
-                pValue.exec();
-                this.executeElse = false;
-            }
-            else if(this.cond) {
+            if(this.cond.toboolean){                    
+                if(this.cond.toboolean()) {
+                    pValue.exec();
+                    this.executeElse = false;
+                }
+            } else if(this.cond) {
                 pValue.exec();
                 this.executeElse = false;
             }

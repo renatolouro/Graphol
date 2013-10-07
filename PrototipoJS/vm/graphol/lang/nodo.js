@@ -13,7 +13,7 @@ function Nodo() {
     }
     
     this.end = function() {
-        if(Strategy.end!=null)  Strategy.end();
+        if(Strategy != null && Strategy.end!=null)  Strategy.end();
     }
     
     this.tonumber = function() {
@@ -27,8 +27,8 @@ function Nodo() {
     this.getType = function() {
         return Strategy.getType();
     }
-    this.toBoolean = function() {
-        if(Strategy != null && Strategy.toBoolean != null) return Strategy.toBoolean();
+    this.toboolean = function() {
+        if(Strategy != null && Strategy.toboolean != null) return Strategy.toboolean();
         return false; 
     }
     
