@@ -23,7 +23,7 @@ function grapholCompiler() {
     var ehNodoReservado = function(psCode) {
         var snodo;
         if (psCode.length>=p_iPos+2) {
-            snodo = psCode.substring(p_iPos,p_iPos+1);
+            snodo = psCode.substring(p_iPos,p_iPos+2);
             if(snodo == '!='
                 || snodo == '<='
                 || snodo == '>=') {
