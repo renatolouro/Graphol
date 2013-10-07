@@ -31,4 +31,7 @@ function strategy_String(pValue) {
     this.getType = function() {
         return p_mytype;
     }
+    this.getValue = function() {
+        return this.value;
+    }
 }

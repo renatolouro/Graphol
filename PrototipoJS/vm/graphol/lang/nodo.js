@@ -32,6 +32,11 @@ function Nodo() {
         return false; 
     }
     
+    this.getValue = function() {
+        if(Strategy != null && Strategy.getValue != null) return Strategy.getValue();
+        return null;
+    }
+    
     this.equals = function(pNodo) {
 
     }

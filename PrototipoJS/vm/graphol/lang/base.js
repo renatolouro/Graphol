@@ -23,7 +23,8 @@ function strategy_Factory(pValue) {
             else if (pValue.getType() == "operator") {
                 Strategy = new strategy_Number(null);
                 Strategy.receive(pValue);
-            }
+            } else if (pValue.getType() == "logicOperator")
+                Strategy = pValue;
             else
                 Strategy = new strategy_String(pValue.tostring());
         }

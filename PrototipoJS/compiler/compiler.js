@@ -42,15 +42,13 @@ function grapholCompiler() {
             || snodo == '/'
             || snodo == '^'
                 ) return (new nodoParser(snodo,"Operator"));
-        if (snodo == '&'
-            || snodo == '|'
-            || snodo == '!'
-            || snodo == 'x|'
-                ) return (new nodoParser(snodo,"BooleanOperator"));
+        if (snodo == '&') return (new nodoParser("&&","BooleanOperator"));
+        if (snodo == '|') return (new nodoParser("||","BooleanOperator"));
+        if (snodo == '!') return (new nodoParser("!","BooleanOperator"));
         if (snodo == '>'
-            || snodo == '<'
-            || snodo == '='
-                ) return (new nodoParser(snodo,"LogicalOperator")); 
+            || snodo == '<') return (new nodoParser(snodo,"LogicalOperator"));
+        if (snodo == '='
+                ) return (new nodoParser("==","LogicalOperator")); 
             
         return false;
     }   

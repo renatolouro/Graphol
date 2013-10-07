@@ -53,4 +53,7 @@ function strategy_Number(pValue) {
     this.getType = function() {
         return p_mytype;
     }
+    this.getValue = function() {
+        return this.value;
+    }
 }
