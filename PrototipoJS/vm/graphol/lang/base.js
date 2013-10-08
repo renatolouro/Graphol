@@ -25,6 +25,8 @@ function strategy_Factory(pValue) {
                 Strategy.receive(pValue);
             } else if (pValue.getType() == "logicOperator")
                 Strategy = pValue;
+            else if (pValue.getType() == "booleanOperator")
+                Strategy = pValue;
             else
                 Strategy = new strategy_String(pValue.tostring());
         }
