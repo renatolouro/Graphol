@@ -11,8 +11,10 @@ function strategy_BooleanOperator(psSignal)
             nodoValue = new Nodo();
             nodoValue.receive(pValue);
         }
-        if(this.valueReference==null) this.valueReference=nodoValue;
-        else {
+        if(this.name=="!") eval("this.value = ("+this.name+" nodoValue.toboolean());");
+        else if(this.valueReference==null) this.valueReference=nodoValue;
+        else if(this.name=="x|")eval("this.value = ((this.valueReference.toboolean() || nodoValue.toboolean()) && !(this.valueReference.toboolean() && nodoValue.toboolean()));");
+        else{
             eval("this.value = (this.valueReference.toboolean() "+this.name+" nodoValue.toboolean());");
         }
     }
