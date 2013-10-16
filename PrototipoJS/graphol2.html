@@ -3,8 +3,8 @@
     <script type="text/javascript" src="import.js"></script>
     <body>
         <h1>Protótipo Graphol</h1>
-        <a href="graphol2.html" > Operações Numéricas &gt;&gt;</a>
-        <h2 id="exeTitle">REGRAS BÁSICAS</h2>
+        <a href="graphol.html" > &lt;&lt; REGRAS BÁSICAS</a> || <a href="graphol3.html" > Execução de Blocos &gt;&gt;</a>
+        <h2 id="exeTitle">Operações Numéricas</h2>
         <div id="exeText" >Uma expressão é formada por um nodo seguido, opcionalmente por um ou mais: NODO1 NODO2 NODO3 ... NODON</br>
             Isto significa que NODO1 receberá como mensagem os NODOS seguintes e os tratará individualmente.</br>
             Eventualmente um nodo é formado por uma expressão entre parenteses. Neste caso, internamente funciona a mesma regra: o primeiro nodo recebe as mensagens seguintes<br />
@@ -15,15 +15,11 @@
             nodo2 2 "2" -> 4 <br />
         </div>
         <textarea id=code cols=80 rows=15>
-nome (input "Qual é seu nome?")
-num1 2
-num2 2
-echo ("Olá " nome "!") ("Voce sabia que " num1 "+" num2 "=" (soma num1 num2) "?")
-echo soma
-num3 2 2
-num3 3 3 3
-echo "v" nome num3
-echo ("v" nome num3)
+echo (2 + 2)
+echo (+ 3 3) 
+echo (+ 2 3 4)
+echo (8 + 3 4 - 1 2)
+echo (8 * 2 / 4)
         </textarea>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); vm.load(document.getElementById("codeJs").value); vm.exec(); ' value="Compila e Executa"/>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); ' value="Compila"/>
