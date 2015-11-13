@@ -3,8 +3,8 @@
     <script type="text/javascript" src="import.js"></script>
     <body>
         <h1>Protótipo Graphol</h1>
-        <a href="graphol3.html" > &lt;&lt; Execução de Blocos</a> || <a href="graphol5.html" > Execução Assíncrona &gt;&gt;</a>
-        <h2 id="exeTitle">Condicional</h2>
+        <a href="graphol4.html" > &lt;&lt; Condicional</a>
+        <h2 id="exeTitle">Execução Assíncrona</h2>
         <div id="exeText" >Uma expressão é formada por um nodo seguido, opcionalmente por um ou mais: NODO1 NODO2 NODO3 ... NODON</br>
             Isto significa que NODO1 receberá como mensagem os NODOS seguintes e os tratará individualmente.</br>
             Eventualmente um nodo é formado por uma expressão entre parenteses. Neste caso, internamente funciona a mesma regra: o primeiro nodo recebe as mensagens seguintes<br />
@@ -15,29 +15,44 @@
             nodo2 2 "2" -> 4 <br />
         </div>
         <textarea id=code cols=80 rows=15>
-if (= 3 6){
-      echo "Isto é falso"
- } (> 4 5) {
-      echo "Isto não é verdade"
- } else {
-      echo "Na verdade, sem verdades por aqui..."
+stdout "console"
+foo {
+    echo "FOO"
+    echo "FOOO"
+    echo "FOOOO"
+    echo "FOOOOO"
+    echo "FOOOOOO"
+    echo "FOOOOOOO"
+    echo "FOOOOOOOO"
+    echo "FOOOOOOOOO"
+
 }
 
-if (!(= 3 6)){
-      echo "Em programação, a negação de uma mentira é uma verdade!"
- } (< 4 5) {
-      echo "E isto também é verdade"
- } else {
-      echo "Já por aqui, só verdades..."
+bar {
+    echo "BAR"
+    echo "BARR"
+    echo "BARRR"
+    echo "BARRRR"
+    echo "BARRRRR"
+    echo "BARRRRRR"
+    echo "BARRRRRRR"
+    echo "BARRRRRRRR"
 }
 
-if (x| (= 6 6) (= 3 6) ) {
-      echo "Ou uma coisa ou outra!"
- } (x| (= 6 6) (= 3 3) ) {
-      echo "As duas, nem pensar!"
- } (x| (= 6 3) (= 3 6) ) {
-      echo "Nenhuma, muito menos!"
- } 
+baz {
+    echo "BAZ"
+    echo "BZZZ"
+    echo "BAZZZ"
+    echo "BAZZZZ"
+    echo "BAZZZZZ"
+    echo "BAZZZZZZ"
+    echo "BAZZZZZZZ"
+    echo "BAZZZZZZZZ"
+}
+
+foo async run
+bar async run
+baz run
         </textarea>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); vm.load(document.getElementById("codeJs").value); vm.exec(); ' value="Compila e Executa"/>
         <input type=button onclick='document.getElementById("codeJs").value = gc.parser(document.getElementById("code").value); ' value="Compila"/>
