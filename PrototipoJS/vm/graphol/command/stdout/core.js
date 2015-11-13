@@ -15,4 +15,10 @@ function Stdout() {
     this.echo = function(pValue) {
         p_Strategy.echo(pValue);
     }
+    
+    this.exec = function() {
+    }
+    
+    this.end = function() {
+    }
 }
